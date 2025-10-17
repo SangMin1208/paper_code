@@ -78,9 +78,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
       
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-date","listing-title","listing-author"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -203,42 +203,35 @@ window.Quarto = {
 
 
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1778371200000" data-listing-file-modified-sort="1760697846264" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/Untitled.html" class="no-external"></a></p><a href="./posts/Untitled.html" class="no-external">
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-</a><p><a href="./posts/Untitled.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/Untitled.html" class="no-external">Class Activation Maps</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/Untitled.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/Untitled.html" class="no-external">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="bu">print</span>(<span class="st">'hello'</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>hello</code></pre>
-</div>
-</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/Untitled.html" class="no-external">
-<div class="listing-date">
-May 10, 2026
-</div>
-<div class="listing-author">
-이상민
-</div>
-</a>
-</div>
-</div>
-</div>
+<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
+<table class="quarto-listing-table table">
+<thead>
+<tr>
+<th>
+Date
+</th>
+<th>
+Title
+</th>
+<th>
+Author
+</th>
+</tr>
+</thead>
+<tbody class="list">
+<tr data-index="0" data-listing-date-sort="1778371200000" data-listing-file-modified-sort="1760697894020" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1" data-listing-title-sort="Class Activation Maps" data-listing-filename-sort="1.Class_Activation_Maps.ipynb">
+<td>
+<span class="listing-date">May 10, 2026</span>
+</td>
+<td>
+<a href="./posts/1.Class_Activation_Maps.html" class="title listing-title">Class Activation Maps</a>
+</td>
+<td>
+<span class="listing-author">이상민 </span>
+</td>
+</tr>
+</tbody>
+</table>
 <div class="listing-no-matching d-none">
 No matching items
 </div>
