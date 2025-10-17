@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="이상민">
-<meta name="dcterms.date" content="2026-05-10">
+<meta name="dcterms.date" content="2025-10-17">
 
 <title>2. Generative Adversarial Network(GAN)) – paper_code</title>
 <style>
@@ -195,7 +195,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 10, 2026</p>
+        <p class="date">October 17, 2025</p>
       </div>
     </div>
     
@@ -214,6 +214,44 @@ window.Quarto = {
 
 
 
+<section id="title-generative-adversarial-nets" class="level4">
+<h4 class="anchored" data-anchor-id="title-generative-adversarial-nets">title : Generative Adversarial Nets</h4>
+</section>
+<section id="author-goodfellow-et-al." class="level4">
+<h4 class="anchored" data-anchor-id="author-goodfellow-et-al.">author : Goodfellow et al.</h4>
+</section>
+<section id="year-2014" class="level4">
+<h4 class="anchored" data-anchor-id="year-2014">year : 2014</h4>
+<ol type="1">
+<li>idea</li>
+</ol>
+<ul>
+<li>두 신경망(Generator 와 Discriminator)을 경쟁적으로 학습시켜 실제와 구별하기 어려운 가짜 데이터를 생성하는 프레임 워크.</li>
+</ul>
+<ol start="2" type="1">
+<li>구조</li>
+</ol>
+<ul>
+<li>Generator : 노이즈 벡터 z를 입력받아 가짜 데이터 생성</li>
+<li>Discriminator : 실제 데이터와 생성된 데이터를 구별</li>
+</ul>
+<ol start="2" type="1">
+<li>메커니즘</li>
+</ol>
+<ul>
+<li>Minimax Game : <span class="math inline">\(min_G\;max_D\;=\;E[logD(x)]\;+\;E[log(1-D(G(z)))]\)</span></li>
+<li>D는 실제 데이터에 높은 확률, 가짜 데이터에 낮은 확률 할당하도록 학습</li>
+<li>G는 D가 구별하지 못하도록 더 실제같은 데이터 생성 학습</li>
+</ul>
+<ol start="3" type="1">
+<li>세부사항</li>
+</ol>
+<ul>
+<li>명시적 확률 밀도 함수 없이도 생성 모델 학습 가능</li>
+<li>역전파를 통한 end-to-end 학습</li>
+<li>Nash 균형점에서 이론적으로 최적해 달성</li>
+</ul>
+</section>
 <section id="imports" class="level3">
 <h3 class="anchored" data-anchor-id="imports">1. imports</h3>
 <div id="f227cc96-5a21-4737-9b76-8a50aa252bd5" class="cell" data-execution_count="1">
@@ -224,44 +262,8 @@ window.Quarto = {
 </section>
 <section id="gangoodfellow-et-al.-2014-intro" class="level3">
 <h3 class="anchored" data-anchor-id="gangoodfellow-et-al.-2014-intro">2. GAN(Goodfellow et al.&nbsp;2014) intro</h3>
-<section id="a.-잡썰.." class="level4">
-<h4 class="anchored" data-anchor-id="a.-잡썰..">A. 잡썰..</h4>
-<p><code>-</code> 저자: 이안굿펠로우</p>
-<ul>
-<li>천재임</li>
-<li>지도교수가 요수아 벤지오</li>
-</ul>
-<p><code>-</code> 저는 아래의 논문 읽고 소름돋았어요..</p>
-<ul>
-<li>https://arxiv.org/abs/1406.2661</li>
-</ul>
-<p><code>-</code> 최근 10년간 머신러닝 분야에서 가장 혁신적인 아이디어이다. (얀르쿤, 2014년 시점..)</p>
-<p><code>-</code> 야사와 만화로 배우는 인공지능</p>
-<ul>
-<li>https://wedatalab.tistory.com/125</li>
-</ul>
-</section>
-<section id="b.-gan의-원리" class="level4">
-<h4 class="anchored" data-anchor-id="b.-gan의-원리">B. GAN의 원리</h4>
-<p><code>-</code> GAN의 원리는 경찰과 위조지폐범이 서로 선의의(?) 경쟁을 통하여 서로 발전하는 모형으로 설명할 수 있다.</p>
-<blockquote class="blockquote">
-<p>The generative model can be thought of as analogous to a team of fakers, trying to produce fake currency and use it without detection, while the discriminative model is analogous to the police, trying to detect the counterfeit currency. Competition in this game drives both teams to improve their methods until the counterfeits are indistiguishable from the genuine articles.</p>
-</blockquote>
-<p><code>-</code> 서로 적대적인(adversarial) 네트워크(network)를 동시에 학습시켜 가짜이미지를 만든다(generate)</p>
-<p><code>-</code> 무식한 상황극..</p>
-<ul>
-<li>위조범: 가짜돈을 만들어서 부자가 되어야지! (가짜돈을 그림)</li>
-<li>경찰: (위조범이 만든 돈을 보고) 이건 가짜다!</li>
-<li>위조범: 걸렸군.. 더 정교하게 만들어야지..</li>
-<li>경찰: (깜빡 속으며) 이건 진짠가?… –&gt; 상사에게 혼남 –&gt; 판별능력 업그레이드 –&gt; 이건 가짜다!!</li>
-<li>위조범: 더 정교하게 만들자..</li>
-<li>경찰: 더 판별능력을 업그레이드 하자!</li>
-<li>반복..</li>
-</ul>
-<p><code>-</code> 굉장히 우수한 경찰조차도 진짜와 가짜를 구분하지 못할때(=진짜 이미지를 0.5의 확률로만 진짜라고 말할때 = 가짜 이미지를 0.5의 확률로만 가짜라고 말할때) 학습을 멈춘다.</p>
-</section>
-<section id="c.-생성모형이란-쉬운-설명" class="level4">
-<h4 class="anchored" data-anchor-id="c.-생성모형이란-쉬운-설명">C. 생성모형이란? (쉬운 설명)</h4>
+<section id="a.-생성모형이란" class="level4">
+<h4 class="anchored" data-anchor-id="a.-생성모형이란">A. 생성모형이란?</h4>
 <p><code>-</code> 사진속에 들어있는 동물이 개인지 고양이인지 맞출수 있는 기계와 개와 고양이를 그릴수 있는 기계중 어떤것이 더 시각적보에 대한 이해가 깊다고 볼 수 있는가?</p>
 <p><code>-</code> 진정으로 인공지능이 이미지자료를 이해했다면, 이미지를 만들수도 있어야 한다. <span class="math inline">\(\to\)</span> 이미지를 생성하는 모형을 만들어보자 <span class="math inline">\(\to\)</span> 성공</p>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/1/1f/Woman_1.jpg" class="img-fluid"></p>
@@ -270,31 +272,9 @@ window.Quarto = {
 <p>명언: 만들수 없다면 이해하지 못한 것이다, 리처드 파인만 (천재 물리학자)</p>
 </blockquote>
 </section>
-<section id="d.-생성모형이란-통계학과-버전의-설명" class="level4">
-<h4 class="anchored" data-anchor-id="d.-생성모형이란-통계학과-버전의-설명">D. 생성모형이란? 통계학과 버전의 설명</h4>
-<p><code>-</code> 이미지 <span class="math inline">\(\boldsymbol{X}\)</span> 가 주어졌을 경우 라벨을 <span class="math inline">\(y\)</span> 라고 하자.</p>
-<p><code>-</code> 이미지를 보고 라벨을 맞추는 일은 <span class="math inline">\(p(y| \boldsymbol{X})\)</span>에 관심이 있다고 볼 수 있다. – 판별모형</p>
-<p><code>-</code> 이미지를 생성하는 일은 <span class="math inline">\(p(\boldsymbol{X},y)\)</span>에 관심이 있는것이다. – 생성모형</p>
-<p><code>-</code> 데이터의 생성확률 <span class="math inline">\(p(\boldsymbol{X},y)\)</span>을 알면 클래스의 사후확률 <span class="math inline">\(p(y|\boldsymbol{X})\)</span>를 알 수 있음. (아래의 수식 참고) 하지만 역은 불가능</p>
-<p><span class="math display">\[p(y|{\boldsymbol X}) = \frac{p({\boldsymbol X},y)}{p({\boldsymbol X})} = \frac{p({\boldsymbol X},y)}{\sum_{y}p({\boldsymbol X},y)}\]</span></p>
-<ul>
-<li>즉 이미지를 생성하는일은 분류문제보다 더 어려운 일이라 해석가능</li>
-</ul>
-</section>
-<section id="e.-철학의-차이" class="level4">
-<h4 class="anchored" data-anchor-id="e.-철학의-차이">E. 철학의 차이</h4>
-<blockquote class="blockquote">
-<p>명언: 제한된 정보만으로 어떤 문제를 풀 때, 그 과정에서 원래의 문제보다 일반적인 문제를 풀지 말고 (=문제를 괜히 어렵게 만들어서 풀지 말고), 가능한 원래의 문제를 직접 풀어야한다. 배프닉 (SVM 창시자)</p>
-</blockquote>
-<p><code>-</code> 따라서 배프닉의 원리에 의하면 일반적인 분류문제를 해결할때 “판별모형이 생성모형보다 더 바람직한 접근법”이라 할 수 있음. 즉 개와 고양이를 구분할 때, 그려진 개와 고양이 사진을 잘 구분하면 되는 것이지 굳이 개와 고양이를 그릴줄 알아야하는건 아니라는 의미.</p>
-<p><code>*</code> 예전에는 머신러닝의 응용분야가 “분류/회귀”에 한정된 느낌이었는데 요즘은 생성모형도 인기있음.</p>
-<ul>
-<li>마인드가 되게 달라요</li>
-</ul>
-</section>
 </section>
 <section id="gan의-구현" class="level3">
-<h3 class="anchored" data-anchor-id="gan의-구현">4. GAN의 구현</h3>
+<h3 class="anchored" data-anchor-id="gan의-구현">3. GAN의 구현</h3>
 <section id="a.-data" class="level4">
 <h4 class="anchored" data-anchor-id="a.-data">A. Data</h4>
 <div id="c7dbce91-baf8-46bb-b79b-cdf99af611db" class="cell" data-execution_count="5">
