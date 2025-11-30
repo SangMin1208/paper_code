@@ -226,7 +226,7 @@ window.Quarto = {
 <li>idea</li>
 </ol>
 <ul>
-<li>CNN이 이미지 분류 시 어떤 영역에 주목하는지 시각화하는 기법. 별로듸 localization 학습 없이도 분류 모델이 객체의 위치를 파악할 수 있음을 보여줌.</li>
+<li>CNN이 이미지 분류 시 어떤 영역에 주목하는지 시각화하는 기법. 별도의 localization 학습 없이도 분류 모델이 객체의 위치를 파악할 수 있음을 보여줌.</li>
 </ul>
 <ol start="2" type="1">
 <li>메커니즘</li>
@@ -499,8 +499,6 @@ torch.Size([1, 1])</code></pre>
 </section>
 <section id="camahou-et-al.-2016의-구현" class="level3">
 <h3 class="anchored" data-anchor-id="camahou-et-al.-2016의-구현">5. CAM(Ahou et al.&nbsp;2016)의 구현</h3>
-<p>ref: <a href="https://arxiv.org/abs/1512.04150" class="uri">https://arxiv.org/abs/1512.04150</a></p>
-<p><code>-</code> 이 강의노트는 위의 논문의 내용을 재구성하였음.</p>
 <section id="a.-0단계-xy-xxyy" class="level4">
 <h4 class="anchored" data-anchor-id="a.-0단계-xy-xxyy">A. 0단계 – (X,y), (XX,yy)</h4>
 <div id="4a326c44-3112-4899-80b5-ed36c2053e19" class="cell" data-execution_count="35">
@@ -675,7 +673,6 @@ torch.Size([1, 1]) -- flattn(ap(_linr(stem(x))))</code></pre>
  tensor([[-5.5534]], device='cuda:0', grad_fn=&lt;ViewBackward0&gt;))</code></pre>
 </div>
 </div>
-<p><code>-</code> <strong>멈추고 생각해보기…!!</strong></p>
 <p><code>-</code> 원래 계산방식을 적용</p>
 <div id="e8145b41-f08c-4413-8642-b04eb10f825f" class="cell" data-execution_count="61">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>linr(flattn(ap(stem(x))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
