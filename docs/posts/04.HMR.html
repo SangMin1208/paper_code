@@ -69,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -151,8 +180,63 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<section id="hmr-end-to-end-recovery-of-human-shape-and-pose" class="level2">
+<h2 class="anchored" data-anchor-id="hmr-end-to-end-recovery-of-human-shape-and-pose">HMR: End-to-end Recovery of Human Shape and Pose</h2>
+<section id="용어-정리" class="level3">
+<h3 class="anchored" data-anchor-id="용어-정리">용어 정리</h3>
+<ul>
+<li>Mesh Reconstruction : Shape + Pose Reconstruction</li>
+<li>Mesh file : .obj <span class="math inline">\(\rightarrow\)</span> vertex(꼭짓점 6000 <span class="math inline">\(\times\)</span> 3), face(면 15000 <span class="math inline">\(\times\)</span> 3)(integer형태, vertex의 index, face는 고정하고 vertex만 바뀜)</li>
+</ul>
+</section>
+<section id="abstract" class="level3">
+<h3 class="anchored" data-anchor-id="abstract">0. abstract</h3>
+<ul>
+<li>single RGB image로 3D mesh reconstruction</li>
+<li>이미지들에 대한 2D keypoint annotation밖에 없을 때 reprojection loss를 최소화하는 것이 목표</li>
+<li>reprojection loss 만으로 학습하는 것은 제약이 부족해, SMPL 파라미터가 real 3D human mesh database로부터 온것인지, network로부터 출력된 값인지 분별하는 discriminator를 추가해서 adversarial training</li>
+</ul>
+</section>
+<section id="introduction" class="level3">
+<h3 class="anchored" data-anchor-id="introduction">1. Introduction</h3>
+<section id="기존-방식들의-문제" class="level4">
+<h4 class="anchored" data-anchor-id="기존-방식들의-문제">1) 기존 방식들의 문제</h4>
+<ul>
+<li>기존 방법들은 3D joint location만 추정</li>
+<li>Joint 만으로는 full DoF를 표현 못함</li>
+<li><span class="math inline">\(\rightarrow\)</span> full 3D mesh복원을 목표로 함</li>
+</ul>
+</section>
+<section id="어려움" class="level4">
+<h4 class="anchored" data-anchor-id="어려움">2) 어려움</h4>
+<ul>
+<li>3D ground truth 데이터가 거의 없음</li>
+<li>depth ambiguity : 같은 2D projection에 여러 3D구조가 대응가능</li>
+<li>scale ambiguity : 사람 크기와 카메라 거리 간 모호성 존재</li>
+</ul>
+</section>
+<section id="overview-of-the-proposed-framework" class="level4">
+<h4 class="anchored" data-anchor-id="overview-of-the-proposed-framework">3) Overview of the proposed framework</h4>
+<ul>
+<li>이미지가 CNN을 통해 인코딩됨. 인코딩된 latent vector는 3차원 회귀 모듈에 보내지고 이 모듈에서 사람의 3차원 형상을 표현하는 것을 학습함</li>
+<li>회귀 모듈에서 나온 3차원 형상을 표현하는 latent vector(<span class="math inline">\(s, R, T, \beta, \theta\)</span>)들은 reprojection error를 최소화 시키는 방식으로 추론된다.</li>
+<li>latent vector로 3차원 Mesh를 만들고 projection하여 3차원 keypoints를, 한번 더 미분하여 2d keypoints를 얻음. 이것과 본래의 이미지의 2d keypoints의 오차를 최소화 시키도록 학습</li>
+<li>3차원 mesh를 Discriminator로 전달. pose나 shape이 사람이 아닐 수 있기 때문에 사람인지 아닌지 판별하는 Discriminator 학습.</li>
+</ul>
+</section>
+<section id="기존과의-차이점" class="level4">
+<h4 class="anchored" data-anchor-id="기존과의-차이점">2) 기존과의 차이점</h4>
+<ul>
+<li>이미지 feature에서 바로 3D mesh 파라미터를 추론할 수 있다. (이전 접근 방식은 2D keypoints로 부터 추론한것) 따라서 2단계로 학습할 필요가 없다.</li>
+<li>뼈대 뿐만이 아니라 mesh를 출력으로 한다.</li>
+<li>end-to-end로 학습한다.</li>
+<li>2D에 매칭되는 3D데이터 없이도 좋은 결과를 낸다.</li>
+</ul>
 
 
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
