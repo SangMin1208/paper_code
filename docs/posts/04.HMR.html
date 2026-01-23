@@ -217,20 +217,48 @@ window.Quarto = {
 </section>
 <section id="overview-of-the-proposed-framework" class="level4">
 <h4 class="anchored" data-anchor-id="overview-of-the-proposed-framework">3) Overview of the proposed framework</h4>
+<p><img src="../assets/hmr-1.png"></p>
 <ul>
-<li>이미지가 CNN을 통해 인코딩됨. 인코딩된 latent vector는 3차원 회귀 모듈에 보내지고 이 모듈에서 사람의 3차원 형상을 표현하는 것을 학습함</li>
-<li>회귀 모듈에서 나온 3차원 형상을 표현하는 latent vector(<span class="math inline">\(s, R, T, \beta, \theta\)</span>)들은 reprojection error를 최소화 시키는 방식으로 추론된다.</li>
+<li>이미지가 CNN(ResNet-50)을 통해 인코딩, 이미지 특징 추출.</li>
+<li>인코딩된 feature vector는 반복적 3차원 회귀 모듈을 통해 파라미터 추정</li>
+<li>회귀 모듈에서 나온 3차원 형상을 표현하는 latent vector(<span class="math inline">\(s, R, T, \beta, \theta\)</span>)</li>
+<li>reprojection error를 최소화 시키는 방식으로 추론ehla</li>
 <li>latent vector로 3차원 Mesh를 만들고 projection하여 3차원 keypoints를, 한번 더 미분하여 2d keypoints를 얻음. 이것과 본래의 이미지의 2d keypoints의 오차를 최소화 시키도록 학습</li>
-<li>3차원 mesh를 Discriminator로 전달. pose나 shape이 사람이 아닐 수 있기 때문에 사람인지 아닌지 판별하는 Discriminator 학습.</li>
+<li>3차원 mesh를 Discriminator로 전달. pose나 shape이 사람이 아닐 수 있기 때문에 사람인지 아닌지 판별하는 Discriminator 학습</li>
 </ul>
 </section>
 <section id="기존과의-차이점" class="level4">
 <h4 class="anchored" data-anchor-id="기존과의-차이점">2) 기존과의 차이점</h4>
 <ul>
-<li>이미지 feature에서 바로 3D mesh 파라미터를 추론할 수 있다. (이전 접근 방식은 2D keypoints로 부터 추론한것) 따라서 2단계로 학습할 필요가 없다.</li>
+<li>이미지 feature에서 바로 3D mesh 파라미터를 추론할 수 있다. (기존 방식은 2D keypoints검출 후 smpl 파라미터를 추론하는 방식) 따라서 2단계로 학습할 필요가 없다.</li>
 <li>뼈대 뿐만이 아니라 mesh를 출력으로 한다.</li>
 <li>end-to-end로 학습한다.</li>
 <li>2D에 매칭되는 3D데이터 없이도 좋은 결과를 낸다.</li>
+</ul>
+</section>
+</section>
+<section id="model" class="level3">
+<h3 class="anchored" data-anchor-id="model">2. Model</h3>
+<section id="the-set-of-parameters" class="level4">
+<h4 class="anchored" data-anchor-id="the-set-of-parameters">1) The set of parameters</h4>
+<ul>
+<li><span class="math inline">\({\theta, \beta, R, T, s}\)</span> : 85차원 벡터</li>
+<li><span class="math inline">\(\theta\)</span> : shape -10dim</li>
+<li><span class="math inline">\(\beta\)</span> : pose - 69dim</li>
+<li><span class="math inline">\(R\)</span> : rotation - 3dim</li>
+<li><span class="math inline">\(t\)</span> : translation -2dim</li>
+<li><span class="math inline">\(s\)</span> : scale - 1dim</li>
+<li><span class="math inline">\(\hat{\mathbf{x}} = s\mathbf{II}(RX(\theta,\beta)) + t\)</span>, <span class="math inline">\(\mathbf{II} is an 2D projection\)</span></li>
+</ul>
+</section>
+<section id="loss-function" class="level4">
+<h4 class="anchored" data-anchor-id="loss-function">loss function</h4>
+<ul>
+<li><span class="math inline">\(L = \lambda(L_{reproj} + \mathbb{1}L_{3D}) +L_{adv}\)</span>
+<ul>
+<li><span class="math inline">\(L_{reproj} = \sum{}{i}||v_i(\mathbf{x}_i - \hat{\mathbf{x}}_i)||_1\)</span> : iterative error feedback 방법 사용</li>
+<li><span class="math inline">\(L_{3D} = L_{3D joints} + L_{3D smpl}\)</span> : 3D ground truth 있을 때만 사용</li>
+</ul></li>
 </ul>
 
 
