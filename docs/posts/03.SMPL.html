@@ -180,8 +180,8 @@ window.Quarto = {
 
 
 
-<section id="smpl-a-skinned-multi-person-linear-model" class="level2">
-<h2 class="anchored" data-anchor-id="smpl-a-skinned-multi-person-linear-model">SMPL : A Skinned Multi-Person Linear Model</h2>
+<section id="smpl-a-skinned-multi-person-linear-model2015" class="level2">
+<h2 class="anchored" data-anchor-id="smpl-a-skinned-multi-person-linear-model2015">SMPL : A Skinned Multi-Person Linear Model(2015)</h2>
 <section id="용어-정리" class="level3">
 <h3 class="anchored" data-anchor-id="용어-정리">용어 정리</h3>
 <ul>
@@ -247,10 +247,14 @@ window.Quarto = {
 </ul>
 <p>↓</p></li>
 <li><p>5단계: 최종 메시</p></li>
+</ul>
+<p><img src="../assets/smpl-1.png"></p>
+<ul>
 <li><p><span class="math inline">\(M(\theta, \beta) = W(Tp(\beta, \theta), J(\beta), \theta, \mathcal{W}) : \mathbb{R}^{|\theta| \times |\beta|} \rightarrow \mathbb{R}^{3N}\)</span></p></li>
 <li><p><span class="math inline">\(Tp(\beta, \theta) = \bar{\mathbf{T}} + Bs(\beta) + Bp(\theta)\)</span></p></li>
 <li><p><strong>Shape blend shapes</strong></p></li>
 <li><p><span class="math inline">\(Bs(\beta; \mathcal{S}) = \sum^{|\beta|}_{n=1}\beta_n\mathbf{S}_n : \mathbb{R}^{|\beta|} \rightarrow \mathbb{R}^{3N}\)</span> <span class="math inline">\(\rightarrow S_n\)</span> : PCA를 통해 학습된 n번째 shape blend shape(주성분)</p></li>
+<li><p>사람(3D 신체 스캔)마다 : 6890 vertices x 3(x,y,x) = 20670차원</p></li>
 <li><p><strong>Joint locations</strong></p></li>
 <li><p><span class="math inline">\(J(\beta; \mathcal{J},\bar{\mathbf{T}},\mathcal{S}) = \mathcal{J}(\bar{\mathbf{T}} + Bs(\beta;\mathcal{S}) : \mathbb{R}^{|\beta|} \rightarrow \mathbb{R}^{3K}\)</span></p></li>
 <li><p><strong>Pose blend shape</strong></p></li>
@@ -273,7 +277,13 @@ window.Quarto = {
 <h4 class="anchored" data-anchor-id="데이터">1) 데이터</h4>
 <ul>
 <li>3D scanner 로 전신 스캔한 데이터 수집</li>
-<li>male : 1700, female : 2100 #### 2) template 정렬(Non-rigid Registration)</li>
+<li>male : 1700, female : 2100</li>
+</ul>
+<p><img src="../assets/smpl-2.png"></p>
+</section>
+<section id="template-정렬non-rigid-registration" class="level4">
+<h4 class="anchored" data-anchor-id="template-정렬non-rigid-registration">2) template 정렬(Non-rigid Registration)</h4>
+<ul>
 <li>모든 scan 데이터를 동일한 위상(topology)의 템플릿 메쉬와 정합해야함 #### 3) shape blend shapes 추출</li>
 <li>다른 사람들의 중립 자세로 normalize 한 뒤에 평균 모델에서 편차를 PCA등으로 분해해 shape basis를 학습</li>
 </ul>

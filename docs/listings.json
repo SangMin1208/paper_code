@@ -2,7 +2,6 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/SMPL.html",
       "/posts/10.Vggta.html",
       "/posts/09.4D_Human.html",
       "/posts/08.Phalp.html",
@@ -11,8 +10,8 @@
       "/posts/05.HaMeR.html",
       "/posts/04.HMR.html",
       "/posts/03.SMPL.html",
-      "/posts/01.Class_Actiation_Map.html",
-      "/posts/02.Generative_Adversarial_Nets.html"
+      "/posts/02.Generative_Adversarial_Nets.html",
+      "/posts/01.Class_Actiation_Map.html"
     ]
   }
 ]
