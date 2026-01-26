@@ -69,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -153,8 +182,140 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="glamr-global-occlusion-aware-human-mesh-recovery-with-dynamic-camerascvpr22" class="level2">
 <h2 class="anchored" data-anchor-id="glamr-global-occlusion-aware-human-mesh-recovery-with-dynamic-camerascvpr22">GLAMR: Global Occlusion-Aware Human Mesh Recovery With Dynamic Cameras(CVPR’22)</h2>
+<section id="연구-배경-및-목적" class="level3">
+<h3 class="anchored" data-anchor-id="연구-배경-및-목적">1. 연구 배경 및 목적</h3>
+<section id="problems" class="level4">
+<h4 class="anchored" data-anchor-id="problems">1) Problems</h4>
+<ul>
+<li>Dynamic Camera 로 촬영된 단안(monocular) 영상에서 global 좌표계상의 3D human mesh recovery</li>
+<li>심각한 long-term occlusions 문제 해결
+<ul>
+<li>물체에 의한 완전한 가림</li>
+<li>missed detection</li>
+<li>카메라 시야각FoV(Field of View) 밖으로 나갔을 때</li>
+</ul></li>
+</ul>
+</section>
+<section id="prior-work" class="level4">
+<h4 class="anchored" data-anchor-id="prior-work">2) Prior Work</h4>
+<ul>
+<li>카메라 좌표계 또는 루트 좌표계에서만 추정, dynamic camera에서 global 좌표 복원 불가</li>
+<li>SLAM을 사용한 카메라 포즈 추정은 실외 환경에서 자주 실패, 스케일 모호성 문제</li>
+<li>부분 가림만 처리 가능, 완전히 보이지 않는 장기 가림 상황 처리 불가</li>
+</ul>
+</section>
+</section>
+<section id="method-4-stage-framework" class="level3">
+<h3 class="anchored" data-anchor-id="method-4-stage-framework">2. Method : 4 Stage Framework</h3>
+<p><img src="../assets/glamr-1.png"></p>
+<section id="stage-mathbfi-preprocessing" class="level4">
+<h4 class="anchored" data-anchor-id="stage-mathbfi-preprocessing">Stage <span class="math inline">\(\mathbf{I}\)</span> : Preprocessing</h4>
+<ul>
+<li>Multi-Object Tracking(MOT) 및 Re-identification으로 각 사람의 바운딩 박스 시퀀스 추출</li>
+<li>Human Mesh Recovery(KAMA or SPEC) 을 사용해 카메라 좌표계에서 각 사람의 모션 <span class="math inline">\(\widetilde{Q}^i\)</span></li>
+<li>occlusion으로 인한 불완전한 모션 데이터도 포함</li>
+</ul>
+</section>
+<section id="stage-mathbfimathbfi-generative-motion-infiller" class="level4">
+<h4 class="anchored" data-anchor-id="stage-mathbfimathbfi-generative-motion-infiller">Stage <span class="math inline">\(\mathbf{I}\mathbf{I}\)</span> : Generative Motion Infiller</h4>
+<ul>
+<li>CVAE(Conditional Variational Autoencoder) 기반 Transformer 구조</li>
+<li>가려진 바디 모션 <span class="math inline">\(\widetilde{\Theta}^i\)</span>를 인필링하여 완전한 body motion <span class="math inline">\(\widehat{\Theta}^i\)</span>를 생성</li>
+</ul>
+<p><img src="../assets/glamr-2.png"></p>
+<ul>
+<li><ol type="A">
+<li>Autoregressive Motion Infilling</li>
+</ol>
+<ul>
+<li>슬라이딩 윈도우 사용(<span class="math inline">\(h\)</span>)</li>
+<li>Context(<span class="math inline">\(h_c\)</span>) : 이미 인필링된 앞부분 프레임</li>
+<li>Look-ahead(<span class="math inline">\(h_l\)</span>) : 끝부분 가이드를 위한 프레임</li>
+<li>Output(<span class="math inline">\(h_o\)</span>): 실제 인필링 되는 중간 프레임</li>
+<li><span class="math inline">\(h_o = h - h_c - h_l\)</span></li>
+</ul></li>
+<li><ol start="2" type="A">
+<li>Motion Infiller Network</li>
+</ol>
+<ul>
+<li>Context Network : Transformer Encoder로 보이는 프레임만 인코딩(기존 CNN방법은 가려진 프레임 0으로 패딩 <span class="math inline">\(\rightarrow\)</span> 보이는 부분만 attention)</li>
+<li>Decoder Network : latent code <span class="math inline">\(z\)</span>와 context를 결합하여 Transformer Decoder와 MLP로 생성</li>
+<li>Prior/Posterior Network : CVAE의 잠재 코드 푼포 생성</li>
+</ul></li>
+<li><ol start="3" type="A">
+<li>Training</li>
+</ol>
+<ul>
+<li>AMASS데이터셋(11,000 + 모션)</li>
+<li>10-40프레임을 랜덤하게 가려서 합성 데이터 생성</li>
+<li>손실함수 : <span class="math inline">\(L_{\mathcal{M}}\)</span> <span class="math inline">\(= \sum^{h}_{t=1}\)</span> <span class="math inline">\(||\widetilde{\theta}_t - \widetilde{\theta}_t^{'}||^2_2\)</span> <span class="math inline">\(+ L^z_{KL}\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="stage-mathbfimathbfimathbfi-global-trajectory-predictor" class="level4">
+<h4 class="anchored" data-anchor-id="stage-mathbfimathbfimathbfi-global-trajectory-predictor">Stage <span class="math inline">\(\mathbf{I}\mathbf{I}\mathbf{I}\)</span> : Global Trajectory Predictor</h4>
+<ul>
+<li>로컬 body motion <span class="math inline">\(\widehat{\Theta}^i\)</span>로부터 글로벌 궤적(root translation <span class="math inline">\(\widehat{T}^i\)</span>, root rotation <span class="math inline">\(\widehat{R}^i\)</span>) 생성</li>
+<li>클로벌 루트 궤적은 로컬 body 움직임과 높은 상관관계</li>
+<li><ol type="A">
+<li>Egocentric Trajectory 표현</li>
+</ol>
+<ul>
+<li>직접적인 6-DoF글로벌 궤적 예측은 큰 오프셋 때문에 일반화 어려움</li>
+<li>장점 : 절대 xy위치와 heading에 불변, 긴 궤적 예측에 유리</li>
+</ul></li>
+<li><ol start="2" type="A">
+<li>네트워크 구조</li>
+</ol>
+<ul>
+<li>LSTM기반(transformer x) - 로컬 변화 예측에 더 적합</li>
+<li>3D joint positions를 SMPL joint function으로 변환하여 입력</li>
+<li>CVAE 구조로 다양한 궤적 샘플링 가능</li>
+</ul></li>
+</ul>
+</section>
+<section id="stage-mathbfimathbfv-gloval-optimization" class="level4">
+<h4 class="anchored" data-anchor-id="stage-mathbfimathbfv-gloval-optimization">Stage <span class="math inline">\(\mathbf{I}\mathbf{V}\)</span> : Gloval Optimization</h4>
+<ul>
+<li><ol type="A">
+<li>목적</li>
+</ol>
+<ul>
+<li>예측된 궤적을 비디오 2D keypoints에 맞게 정제</li>
+<li>모든 사람의 글로벌 궤적과 카메라 파라미터를 동시 최적화</li>
+</ul></li>
+<li><ol start="2" type="A">
+<li>최적화 변수</li>
+</ol>
+<ul>
+<li>Egocentric trajectories : 한 프레임 수정이 모든 프레임에 전파</li>
+<li>Camera extrinsics : 각 프레임의 카메라 외부 파라미터</li>
+</ul></li>
+<li><ol start="3" type="A">
+<li>Energy Function</li>
+</ol>
+<ul>
+<li><span class="math inline">\(E_{2D}\)</span> : 3D keypoint 투영과 2D 검출 키포인트 간 오차</li>
+<li><span class="math inline">\(E_{traj}\)</span> : 최적화된 궤적을 카메라 좌표로 변환한 것과 Stage <span class="math inline">\(\mathbf{I}\)</span> 출력 간 차이</li>
+<li><span class="math inline">\(E_{reg}\)</span> : Egocentric 궤적이 Stage <span class="math inline">\(\mathbf{I}\mathbf{I}\mathbf{I}\)</span> 예측값에서 크게 벗어나지 않도록 정규화</li>
+<li><span class="math inline">\(E_{cam}\)</span> : 카메라 smoothness + uprightness(y축이 위쪽)</li>
+<li><span class="math inline">\(E_{pen}\)</span> : SDF 기반 사람 간 침투 방지</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="result" class="level3">
+<h3 class="anchored" data-anchor-id="result">3. Result</h3>
+<p><img src="../assets/glamr-3.png"></p>
+<ul>
+<li>G-MPJPE / G-PVE: 글로벌 좌표계에서 joint/vertex 오차</li>
+<li>PA-MPJPE: Procrustes-aligned joint 오차</li>
+<li>Accel: 관절 가속도 오차 (jitter 측정)</li>
+<li>FID: 생성 모션의 품질 (분포 거리)</li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
