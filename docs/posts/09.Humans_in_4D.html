@@ -69,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -157,6 +186,106 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="연구-목적-및-기여">1. 연구 목적 및 기여</h3>
 <section id="problem" class="level4">
 <h4 class="anchored" data-anchor-id="problem">1) Problem</h4>
+<ul>
+<li>single image에서 3D human mesh를 reconstruction하고, 비디오에서 시간에 따라 추적하는 완전한 트랜스포머 기반 접근법 제시</li>
+</ul>
+</section>
+</section>
+<section id="reconstructing-peoplehmr-2.0-transformer-기반" class="level3">
+<h3 class="anchored" data-anchor-id="reconstructing-peoplehmr-2.0-transformer-기반">2. Reconstructing People(HMR 2.0, transformer 기반)</h3>
+<p><img src="../assets/4dhumans-1.png"></p>
+<section id="architecture" class="level4">
+<h4 class="anchored" data-anchor-id="architecture">1) Architecture</h4>
+<ul>
+<li>Vision Transformer(ViT-H/16) : 이미지를 패치로 분할하여 토큰화</li>
+<li>트랜스포머 디코더 : SMPL 쿼리 토큰에 cross-attention 수행</li>
+<li>출력 : SMPL 파라미터 (pose <span class="math inline">\(\theta\)</span>, shape <span class="math inline">\(\beta\)</span>, camera <span class="math inline">\(\pi\)</span>)</li>
+</ul>
+</section>
+<section id="특징" class="level4">
+<h4 class="anchored" data-anchor-id="특징">2) 특징</h4>
+<ul>
+<li>도메인 특화 설계 없이 end-to-end 학습</li>
+<li>특이한 자세와 다양한 시점에서도 강건한 성능</li>
+<li>기존 HMR의 완전한 트랜스포머화</li>
+</ul>
+</section>
+<section id="loss-function" class="level4">
+<h4 class="anchored" data-anchor-id="loss-function">Loss function</h4>
+<ul>
+<li><span class="math inline">\(\mathcal{L} = \mathcal{L}_{smpl} + \mathcal{L}_{kp3D} + \mathcal{L}_{kp2D} + \mathcal{L}_{adv}\)</span></li>
+<li>SMPL 파라미터 + 3D/2D keypoint + Adversarial prior</li>
+</ul>
+</section>
+</section>
+<section id="tracking-people4d-humans-비디오에서의-추적-시스템" class="level3">
+<h3 class="anchored" data-anchor-id="tracking-people4d-humans-비디오에서의-추적-시스템">3. Tracking People(4D Humans : 비디오에서의 추적 시스템)</h3>
+<section id="구조" class="level4">
+<h4 class="anchored" data-anchor-id="구조">1) 구조</h4>
+<ul>
+<li>HMR 2.0으로 각 프레임에서 3D 복원</li>
+<li>3D 공간에서 추적 수행(Phalp 기반)</li>
+<li>포즈, 위치, 외형 정보를 활용한 데이터 연관</li>
+</ul>
+</section>
+<section id="장점" class="level4">
+<h4 class="anchored" data-anchor-id="장점">2) 장점</h4>
+<ul>
+<li>다중 인물 처리 가능</li>
+<li>Occlusion 상황에서도 신원 유지</li>
+<li>Amodal completion으로 누락된 검출 보완</li>
+</ul>
+</section>
+</section>
+<section id="ablation" class="level3">
+<h3 class="anchored" data-anchor-id="ablation">4. Ablation</h3>
+<section id="resnet-50-vs.-vit-h" class="level4">
+<h4 class="anchored" data-anchor-id="resnet-50-vs.-vit-h">1) ResNet-50 vs.&nbsp;ViT-H</h4>
+<ul>
+<li>ViT-H 대폭적 성능향상</li>
+<li>사전학습 방식
+<ul>
+<li>Random init : 별로</li>
+<li>MAE사전학습 : 좋음</li>
+<li>MAE + 2D keypoint : best</li>
+</ul></li>
+</ul>
+</section>
+<section id="데이터" class="level4">
+<h4 class="anchored" data-anchor-id="데이터">2) 데이터</h4>
+<ul>
+<li>기본 데이터셋 <span class="math inline">\(\rightarrow\)</span> +AVA <span class="math inline">\(\rightarrow\)</span> + 모든 데이터</li>
+<li>데이터 증가할 때마다 2D 정렬 성능 향상</li>
+<li>특이한 자세 처리 능력 개선</li>
+</ul>
+</section>
+</section>
+<section id="한계점" class="level3">
+<h3 class="anchored" data-anchor-id="한계점">5. 한계점</h3>
+<section id="smpl-모델-제약" class="level4">
+<h4 class="anchored" data-anchor-id="smpl-모델-제약">1) SMPL 모델 제약</h4>
+<ul>
+<li>손과 얼굴 표정 미포함</li>
+<li>연령대 다양성 제한 (유아, 어린이)</li>
+</ul>
+</section>
+<section id="인물-간-상호작용" class="level4">
+<h4 class="anchored" data-anchor-id="인물-간-상호작용">2) 인물 간 상호작용</h4>
+<ul>
+<li>개별 처리로 인한 세밀한 접촉 표현 어려움</li>
+</ul>
+</section>
+<section id="낮은-해상도" class="level4">
+<h4 class="anchored" data-anchor-id="낮은-해상도">3) 낮은 해상도</h4>
+<ul>
+<li>입력 해상도가 낮을 때 성능 저하</li>
+</ul>
+</section>
+<section id="좌표계" class="level4">
+<h4 class="anchored" data-anchor-id="좌표계">4) 좌표계</h4>
+<ul>
+<li>카메라 프레임 기준 (월드 좌표계 미고려)</li>
+</ul>
 
 
 </section>
