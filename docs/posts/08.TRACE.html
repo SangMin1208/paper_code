@@ -153,8 +153,65 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="trace-5d-temporal-regression-of-avatars-with-dynamic-cameras-in-3d-environments" class="level2">
 <h2 class="anchored" data-anchor-id="trace-5d-temporal-regression-of-avatars-with-dynamic-cameras-in-3d-environments">TRACE: 5D Temporal Regression of Avatars With Dynamic Cameras in 3D Environments</h2>
+<section id="problems" class="level3">
+<h3 class="anchored" data-anchor-id="problems">1. Problems</h3>
+<section id="기존-3d-human-pose-estimation-방법들의-한계" class="level4">
+<h4 class="anchored" data-anchor-id="기존-3d-human-pose-estimation-방법들의-한계">1) 기존 3D human pose estimation 방법들의 한계</h4>
+<ul>
+<li>단일 프레임만 처리, 카메라 좌표계에서만 추정</li>
+<li>사람들 추적하지 못하고 전역 궤적 복원 불가</li>
+<li>움직이는 카메라에서 인간과 카메라의 움직임이 얽혀있어 어려움</li>
+<li>심한 occlusion 발생 시 추적 실패</li>
+</ul>
+</section>
+<section id="핵심-아이디어" class="level4">
+<h4 class="anchored" data-anchor-id="핵심-아이디어">2) 핵심 아이디어</h4>
+<ul>
+<li>5D = 3D 공간 + 시간 + indenity</li>
+<li>시간과 신원을 포함전 holistic(전체론적인) 표현을 도입하여 비디오 전체 정보 활용</li>
+</ul>
+<p><img src="../assets/trace-1.png"></p>
+</section>
+</section>
+<section id="method" class="level3">
+<h3 class="anchored" data-anchor-id="method">2. Method</h3>
+<p><img src="../assets/trace-2.png"></p>
+<section id="temporal-feature-extraction-시간적-특징-추출" class="level4">
+<h4 class="anchored" data-anchor-id="temporal-feature-extraction-시간적-특징-추출">1) Temporal Feature Extraction (시간적 특징 추출)</h4>
+<ul>
+<li>이미지 백본: 단일 프레임 특징 추출</li>
+<li>모션 백본: 인접 프레임 간 optical flow 계산</li>
+<li>Temporal feature propagation: ConvGRU + Deformable convolution으로 장단기 모션 특징 융합</li>
+</ul>
+</section>
+<section id="d-motion-offset-map-새로운-발명" class="level4">
+<h4 class="anchored" data-anchor-id="d-motion-offset-map-새로운-발명">2) 3D Motion Offset Map (새로운 발명)</h4>
+<ul>
+<li>카메라 좌표계에서 프레임 간 사람의 3D 위치 변화를 나타내는 3D 벡터 맵</li>
+<li>이전 프레임에서 현재 프레임으로의 각 피사체 이동을 명시적으로 모델링</li>
+<li>다중 피사체 간 시간적 연관성 구축</li>
+</ul>
+</section>
+<section id="memory-unit-메모리-유닛" class="level4">
+<h4 class="anchored" data-anchor-id="memory-unit-메모리-유닛">3) Memory Unit (메모리 유닛)</h4>
+<ul>
+<li>장기 가림 상황에서도 지속적인 추적 가능</li>
+<li>각 피사체의 상태를 저장하고 업데이트</li>
+<li>Hungarian matching으로 프레임 간 매칭 수행</li>
+<li>3단계 프로세스: 초기화 → 매칭 → 업데이트</li>
+</ul>
+</section>
+<section id="world-motion-map-또-다른-새로운-발명" class="level4">
+<h4 class="anchored" data-anchor-id="world-motion-map-또-다른-새로운-발명">4) World Motion Map (또 다른 새로운 발명)</h4>
+<ul>
+<li>6D 벡터: 전역 좌표계에서의 3D 방향 + 3D 이동 오프셋</li>
+<li>카메라 좌표계의 궤적을 전역 좌표계로 변환</li>
+<li>첫 프레임을 기준으로 누적하여 전역 3D 궤적 생성</li>
+</ul>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->

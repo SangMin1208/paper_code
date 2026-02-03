@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/15.Motion_as_Queries.html",
       "/posts/14.ControlNet.html",
       "/posts/13.Stable_Diffusion.html",
       "/posts/12.VGGT.html",
