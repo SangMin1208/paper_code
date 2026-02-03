@@ -203,7 +203,7 @@ window.Quarto = {
 <h4 class="anchored" data-anchor-id="idea">2) Idea</h4>
 <p><img src="../assets/motion-1.png"></p>
 <ul>
-<li>기존 3-stage cacaded system을 단일 네트워크로 통합</li>
+<li>기존 3-stage cascaded system을 단일 네트워크로 통합</li>
 <li>Detection, Tracking, Pose and Shape Estimation을 동시에 처리</li>
 <li>각 사람의 motion을 query로 표현</li>
 </ul>
@@ -229,15 +229,15 @@ window.Quarto = {
 </section>
 </section>
 <section id="method" class="level3">
-<h3 class="anchored" data-anchor-id="method">2. Method</h3>
+<h3 class="anchored" data-anchor-id="method">3. Method</h3>
 <p><img src="../assets/motion-2.png"></p>
 <section id="preliminaries" class="level4">
 <h4 class="anchored" data-anchor-id="preliminaries">1) Preliminaries</h4>
 <ul>
-<li><span class="math inline">\(H\)</span> = SMPL-X(<span class="math inline">\(\theta, \beta, \alpha\)</span>)</li>
+<li><span class="math inline">\(H\)</span> = <span class="math inline">\(SMPL\)</span>-<span class="math inline">\(X\)</span>(<span class="math inline">\(\theta, \beta, \alpha\)</span>)</li>
 <li><span class="math inline">\(\theta \in \mathbb{R}^{(53\times 3)}\)</span> : pose parameters</li>
 <li><span class="math inline">\(\beta \in \mathbb{R}^{10}\)</span> : shape parameters</li>
-<li><span class="math inline">\(\alpha \in \mathbb{R}^{10}\)</span> : Face expresssions</li>
+<li><span class="math inline">\(\alpha \in \mathbb{R}^{10}\)</span> : Face expressions</li>
 <li><span class="math inline">\(H\)</span> <span class="math inline">\(\in \mathbb{R}^{(10475 \times 3)}\)</span> : 10,475 vertices로 구성된 whole-body mesh</li>
 <li><span class="math inline">\(M^k = {H_i^k}, i=1,2,...,N.\)</span></li>
 <li><span class="math inline">\(H^k\)</span> : a whole-body motion sequence of person <span class="math inline">\(k\)</span></li>
@@ -282,7 +282,7 @@ window.Quarto = {
 <li>j번째 query는 모든 프레임에서 같은 사람을 찾음</li>
 <li>output : <span class="math inline">\(Q'_i\)</span> = {<span class="math inline">\(q'^1_i, q'^2_i, ..., q'^S_i\)</span>}</li>
 </ul></li>
-<li>B-2) Temporal Self_Attention
+<li>B-2) Temporal Self Attention
 <ul>
 <li><span class="math inline">\(q''^j_1, q''^j_2, ..., q''^j_N = \text{Temporal-Self-Attn}
   ({q'^j_1, q'^j_2, ..., q'^j_N})\)</span>, <span class="math inline">\(j\)</span> = 1, 2, …, S</li>
@@ -326,7 +326,7 @@ window.Quarto = {
 </section>
 </section>
 <section id="training-objective" class="level3">
-<h3 class="anchored" data-anchor-id="training-objective">3. Training Objective</h3>
+<h3 class="anchored" data-anchor-id="training-objective">4. Training Objective</h3>
 <section id="a-bipartite-motion-matching" class="level4">
 <h4 class="anchored" data-anchor-id="a-bipartite-motion-matching">A) Bipartite Motion Matching</h4>
 <ul>
@@ -360,8 +360,8 @@ window.Quarto = {
 <li><span class="math inline">\(S_m\)</span> 은 매칭된 query, <span class="math inline">\(S_{-m}\)</span> 은 매칭되지 않은 query, <span class="math inline">\(c^j\)</span>은 j번째 사람의 predicted motion confidence ??? -&gt; Motion prediction의 신뢰도 학습</li>
 </ul>
 </section>
-<section id="d-m3c-a-challenging-motion-dataset-with-moving-camera" class="level4">
-<h4 class="anchored" data-anchor-id="d-m3c-a-challenging-motion-dataset-with-moving-camera">D) M3C : A challenging Motion Dataset with Moving Camera</h4>
+<section id="c-m3c-a-challenging-motion-dataset-with-moving-camera" class="level4">
+<h4 class="anchored" data-anchor-id="c-m3c-a-challenging-motion-dataset-with-moving-camera">C) M3C : A challenging Motion Dataset with Moving Camera</h4>
 <p><img src="../assets/motion-5.png"></p>
 <ul>
 <li>BEDLAM에서 큰 body traslation이 있는 motion 샘플링</li>
@@ -371,7 +371,7 @@ window.Quarto = {
 </section>
 </section>
 <section id="experiments" class="level3">
-<h3 class="anchored" data-anchor-id="experiments">4. Experiments</h3>
+<h3 class="anchored" data-anchor-id="experiments">5. Experiments</h3>
 <section id="a-datasets" class="level4">
 <h4 class="anchored" data-anchor-id="a-datasets">A) Datasets</h4>
 <ul>
@@ -387,11 +387,10 @@ window.Quarto = {
 <li>Comprehensive Results on BEDLAM (Whole-body)
 <ul>
 <li>ID switch 감소, 다른 tracking 성능도 압도적</li>
-<li>그런데도 속도 7.4배 빠름</li>
 </ul></li>
 <li>Pose estimation Quality
 <ul>
-<li>Multi-HMR과 거의 비슷하지만 tracking도 동시에 완벽하게함</li>
+<li>Multi-HMR과 거의 비슷하지만 속도 7.4배 빠름</li>
 </ul></li>
 <li>BEDLAM : Occlusion에서 사람 놓짐, ID switch</li>
 <li>3DPW : 일부 프레임에서 miss, ID 혼동</li>
@@ -407,8 +406,8 @@ window.Quarto = {
 <li>Trace와 거의 동등</li>
 </ul>
 </section>
-<section id="d-dpw-pose-estimation-성능" class="level4">
-<h4 class="anchored" data-anchor-id="d-dpw-pose-estimation-성능">D) DPW : Pose estimation 성능</h4>
+<section id="d-3dpw-pose-estimation-성능" class="level4">
+<h4 class="anchored" data-anchor-id="d-3dpw-pose-estimation-성능">D) 3DPW : Pose estimation 성능</h4>
 <p><img src="../assets/motion-9.png"></p>
 <ul>
 <li>Video 방법중 SOTA</li>
@@ -442,7 +441,7 @@ window.Quarto = {
 </section>
 </section>
 <section id="limitations-and-future-work" class="level3">
-<h3 class="anchored" data-anchor-id="limitations-and-future-work">5. Limitations and Future Work</h3>
+<h3 class="anchored" data-anchor-id="limitations-and-future-work">6. Limitations and Future Work</h3>
 <section id="a-long-term-heavy-occlusion" class="level4">
 <h4 class="anchored" data-anchor-id="a-long-term-heavy-occlusion">A) Long-term Heavy Occlusion</h4>
 <ul>
