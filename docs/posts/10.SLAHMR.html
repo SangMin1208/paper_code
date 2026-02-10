@@ -69,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -151,10 +180,30 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="slahmr-decoupling-human-and-camera-motion-from-videos-in-the-wild" class="level2">
-<h2 class="anchored" data-anchor-id="slahmr-decoupling-human-and-camera-motion-from-videos-in-the-wild">SLAHMR : Decoupling Human and Camera Motion From Videos in the Wild</h2>
+<section id="slahmr-decoupling-human-and-camera-motion-from-videos-in-the-wildcvpr23" class="level2">
+<h2 class="anchored" data-anchor-id="slahmr-decoupling-human-and-camera-motion-from-videos-in-the-wildcvpr23">SLAHMR : Decoupling Human and Camera Motion From Videos in the Wild(CVPR’23)</h2>
+<section id="introduction" class="level3">
+<h3 class="anchored" data-anchor-id="introduction">1. Introduction</h3>
+<section id="problems" class="level4">
+<h4 class="anchored" data-anchor-id="problems">1) Problems</h4>
+<ul>
+<li>in-the-wild에서 human의 global trajectory reconstruction</li>
+<li>카메라의 움직임과 사람의 움직임을 decouple(분리)해야함</li>
+<li><span class="math inline">\(\rightarrow\)</span> SLAHMR(Simultaneous Localization And Human Mesh Recovery) : 배경 픽셀 움직임으로 상대척 카메라 모션 추정, 인체 모션 prior 를 결합해 multiple people 의 global trajectory를 world 좌표계에서 복원</li>
+</ul>
+</section>
+</section>
+<section id="related-work" class="level3">
+<h3 class="anchored" data-anchor-id="related-work">2. Related work</h3>
+<section id="method" class="level4">
+<h4 class="anchored" data-anchor-id="method">1) Method</h4>
+<ul>
+<li>누</li>
+</ul>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
