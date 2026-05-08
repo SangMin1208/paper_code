@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="이상민">
-<meta name="dcterms.date" content="2026-01-10">
+<meta name="dcterms.date" content="2026-04-15">
 
-<title>7. WHAM: Reconstructing World-grounded Humans with Accurate 3D Motion(CVPR’24) – paper_code</title>
+<title>18. HSMR: Reconstructing Humans with a Biomechanically Accurate Skeleton(CVPR’25) – paper_code</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -144,7 +144,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">7. WHAM: Reconstructing World-grounded Humans with Accurate 3D Motion(CVPR’24)</h1>
+      <h1 class="title">18. HSMR: Reconstructing Humans with a Biomechanically Accurate Skeleton(CVPR’25)</h1>
                       </div>
   </div>
     
@@ -161,7 +161,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 10, 2026</p>
+        <p class="date">April 15, 2026</p>
       </div>
     </div>
     
@@ -180,217 +180,29 @@ window.Quarto = {
 
 
 
-<section id="wham-reconstructing-world-grounded-humans-with-accurate-3d-motioncvpr24" class="level2">
-<h2 class="anchored" data-anchor-id="wham-reconstructing-world-grounded-humans-with-accurate-3d-motioncvpr24">WHAM: Reconstructing World-grounded Humans with Accurate 3D Motion(CVPR’24)</h2>
-<section id="section" class="level3">
-<h3 class="anchored" data-anchor-id="section"></h3>
-<ol start="0" type="1">
-<li>Video-Based HMR Methods</li>
-</ol>
-<section id="camera-centric" class="level4">
-<h4 class="anchored" data-anchor-id="camera-centric">1) Camera-centric</h4>
-</section>
-<section id="카메라를-좌표계-카메라를-기준으로-사람의-3d-포즈를-복원-카메라가-움식이면-사람도-움직임" class="level4">
-<h4 class="anchored" data-anchor-id="카메라를-좌표계-카메라를-기준으로-사람의-3d-포즈를-복원-카메라가-움식이면-사람도-움직임">(카메라를 좌표계 : 카메라를 기준으로 사람의 3D 포즈를 복원, 카메라가 움식이면 사람도 움직임)</h4>
+<section id="hsmr-reconstructing-humans-with-a-biomechanically-accurate-skeletoncvpr25" class="level2">
+<h2 class="anchored" data-anchor-id="hsmr-reconstructing-humans-with-a-biomechanically-accurate-skeletoncvpr25">HSMR: Reconstructing Humans with a Biomechanically Accurate Skeleton(CVPR’25)</h2>
 <ul>
-<li>w/o 2D predictions(Image <span class="math inline">\(\rightarrow\)</span> 3D 직접 예측, End-to-end)
-<ul>
-<li>VIBE(CVPR’20), TCMR(CVPR’21), MAED(CVPR,22), GLoT(ICCV’21), etc..</li>
-</ul></li>
-<li>2D-to-3D lifting(Image <span class="math inline">\(\rightarrow\)</span> 2D keypoints <span class="math inline">\(\rightarrow\)</span> 3D pose)
-<ul>
-<li>RGB Video → 2D Pose Detector → Lifting Network → 3D pose</li>
-<li>MotionBERT(ICCV’23)</li>
-<li>장점 : 2D detector는 robust(많은 데이터), 3D GT 없어도 됨</li>
-<li>단점 : Two-stage라서 느림</li>
-</ul></li>
+<li>HMR (2018) — “이미지에서 SMPL을 바로 regression할 수 있다” → 패러다임 제시. ResNet + iterative regressor + adversarial training으로 end-to-end HMR을 열었지만, 아키텍처와 학습 데이터 모두 한계가 있었음</li>
+<li>HMR 2.0 (2023) — “아키텍처를 ViT transformer로 바꾸면 극적으로 좋아진다” → 비정형 포즈, 어려운 시점에서 큰 개선. 이후 거의 모든 후속 연구의 backbone이 됨. 하지만 여전히 SMPL 파라미터를 regression하는 구조</li>
+<li>TokenHMR (2024) — “SMPL 파라미터 공간에서의 학습 자체에 문제가 있다” → regression loss와 joint loss의 misalignment을 발견하고 토큰 기반 학습으로 해결. SMPL 프레임워크 안에서 할 수 있는 최적화의 끝자락</li>
+<li>HSMR (2025) — “SMPL skeleton 자체를 바꿔야 한다” → 10년간 당연시되던 SMPL의 ball joint 설계가 비현실적 관절 회전의 원인임을 보이고, biomechanical skeleton(SKEL)으로 교체. GT 없이 pseudo label + iterative refinement로 학습</li>
 </ul>
+<p>이렇게 하면 발표의 메시지가 “아키텍처 개선(HMR 2.0) → 학습 방법 개선(TokenHMR) → body model 자체 개선(HSMR)”으로 문제 해결의 레이어가 점점 근본으로 내려가는 구조가 되어서, 청중이 “왜 HSMR이 의미 있는가”를 자연스럽게 이해할 수 있습니다.</p>
 </section>
-<section id="global-trajectory" class="level4">
-<h4 class="anchored" data-anchor-id="global-trajectory">2) Global trajectory</h4>
-</section>
-<section id="세계-좌표계-실제-3d-공간에서의-절대-위치-복원.-카메라가-움직여도-사람은-고정된-위치" class="level4">
-<h4 class="anchored" data-anchor-id="세계-좌표계-실제-3d-공간에서의-절대-위치-복원.-카메라가-움직여도-사람은-고정된-위치">(세계 좌표계 : 실제 3D 공간에서의 절대 위치 복원. 카메라가 움직여도 사람은 고정된 위치)</h4>
+<section id="hmr-end-to-end-recovery-of-human-shape-and-posecvpr18" class="level2">
+<h2 class="anchored" data-anchor-id="hmr-end-to-end-recovery-of-human-shape-and-posecvpr18">HMR: End-to-end Recovery of Human Shape and Pose(CVPR’18)</h2>
+<section id="핵심-아이디어" class="level3">
+<h3 class="anchored" data-anchor-id="핵심-아이디어">핵심 아이디어:</h3>
 <ul>
-<li>w/o 2D predictions
-<ul>
-<li>TRACE(CVPR’23)</li>
-<li>장점 : 빠름</li>
-<li>단점 : 3D GT 필요</li>
-</ul></li>
-<li>2D-to-3D lifting
-<ul>
-<li>ProxyCap, WHAM(CVPR’24)</li>
-<li>장점 : 2D detector는 robust(많은 데이터), 3D GT 없어도 됨</li>
-<li>단점 : Two-stage라서 느림</li>
-</ul></li>
-<li>3D postprocessing(3D로 예측 <span class="math inline">\(\rightarrow\)</span> 후처리로 global trajectory 개선
-<ul>
-<li>GLAMR(CVPR’23), SLAHMR(CVPR’24), PACE(3DV’24)</li>
-<li>장점 : 기존 모델 활용, 특정 문제 집중 해결, Flexible</li>
-<li>단점 : 초기 예측에 의존, 추가 computation, pipeline 복잡함</li>
-</ul></li>
-</ul>
-<p><img src="../assets/wham-1.png"></p>
-</section>
-</section>
-<section id="problems" class="level3">
-<h3 class="anchored" data-anchor-id="problems">1. Problems</h3>
-<section id="기존-방법들의-한계" class="level4">
-<h4 class="anchored" data-anchor-id="기존-방법들의-한계">1) 기존 방법들의 한계</h4>
-<ul>
-<li>대부분의 방법들이 카메라 좌표계에서만 인간을 추정</li>
-<li>전역 좌표계 추정 방법들은 평평한 지면을 가정하여 발 미끄러짐 발생</li>
-<li>가장 정확도가 높은 방법들은 최적화 파이프라인을 사용해 오프라인에서만 동작</li>
-<li>비디오 기반 방법들이 단일 프레임 방법보다 오히려 부정확함</li>
-</ul>
-</section>
-<section id="해결하고자-하는-문제" class="level4">
-<h4 class="anchored" data-anchor-id="해결하고자-하는-문제">2) 해결하고자 하는 문제</h4>
-<ul>
-<li>움직이는 카메라로 촬영된 비디오에서 정확하고 효율적인 전역 좌표계 3D human motion reconstruction</li>
-<li>시간적으로 일관되고 발 미끄러짐이 없는 자연스러운 동작 생성</li>
-<li>실시간 또는 실시간에 가까운 처리 속도 달성</li>
-</ul>
-</section>
-<section id="contributions" class="level4">
-<h4 class="anchored" data-anchor-id="contributions">3) Contributions</h4>
-<ul>
-<li>Fuse human motion context and scene context for HMR</li>
-<li>Reduce foot sliding and refine foot contact on non-planar surface</li>
-<li>Effective HMR in global coordinates</li>
-<li>SOTA on in-the-wild benchmarks</li>
-</ul>
-</section>
-</section>
-<section id="methods" class="level3">
-<h3 class="anchored" data-anchor-id="methods">2. Methods</h3>
-<p><img src="../assets/wham-2.png"></p>
-<section id="preprocessing-module" class="level4">
-<h4 class="anchored" data-anchor-id="preprocessing-module">1) Preprocessing Module</h4>
-<ul>
-<li>2D detection
-<ul>
-<li>ViTPose</li>
-</ul></li>
-<li>Image encoder pretrained with HMR task
-<ul>
-<li>ResNet-50 from SPIN</li>
-<li>HRNet-W48 from CLIFF</li>
-<li>ViT-H/16 from HMR2.0</li>
-</ul></li>
-<li>These modules are not trained in this work(파인튜닝 하지 않음)</li>
-</ul>
-</section>
-<section id="motion-encoder-and-decoder" class="level4">
-<h4 class="anchored" data-anchor-id="motion-encoder-and-decoder">2) Motion Encoder and Decoder</h4>
-<ul>
-<li>Unidirectional RNN -&gt; enables online inference</li>
-<li>Motion encoder input
-<ul>
-<li>bbox-normalized 2D keypoints</li>
-<li>Concatenate with box center and scale</li>
-</ul></li>
-<li>Motion encoder
-<ul>
-<li>Add 3D keypoint regression task using separate linear layer on the motion feaure</li>
-</ul></li>
-<li>Feature integrator
-<ul>
-<li>Add image feature for shape parameter regression</li>
-</ul></li>
-<li>Motion decoder
-<ul>
-<li>Outputs : SMPL pose and shape, camera pose, contact probability</li>
-</ul></li>
-</ul>
-</section>
-<section id="global-trajectory-decoder" class="level4">
-<h4 class="anchored" data-anchor-id="global-trajectory-decoder">3) Global Trajectory Decoder</h4>
-<ul>
-<li>Global trajectory devoder
-<ul>
-<li>Regress global root orientation and root velocity</li>
-<li>Append camera angular velocity to the motion feature</li>
-</ul></li>
-<li>Contact-aware trajectory refinement
-<ul>
-<li>Minimize foot sliding using ground contact probability</li>
-<li>Refine trajectory with additional module</li>
-</ul></li>
-</ul>
-</section>
-</section>
-<section id="training" class="level3">
-<h3 class="anchored" data-anchor-id="training">3. Training</h3>
-<p><img src="../assets/wham-3.png"></p>
-<section id="pretraining" class="level4">
-<h4 class="anchored" data-anchor-id="pretraining">1) Pretraining</h4>
-<ul>
-<li>Use AMASS dataset(SMPL mesh only)</li>
-<li>Generate random camera motion</li>
-<li>Obtain 2D keypoints with camera prejection</li>
-</ul>
-</section>
-<section id="finetuning" class="level4">
-<h4 class="anchored" data-anchor-id="finetuning">2) Finetuning</h4>
-<ul>
-<li>Studio : Human3.6M, MPI-INF-3DHP</li>
-<li>Outdoor : 3DPW, RICH, EMDB</li>
-<li>No pose GT : InstaVariety</li>
-<li>Synthetic : BEDLAM</li>
-<li>No image : AMASS</li>
-</ul>
-</section>
-</section>
-<section id="results" class="level3">
-<h3 class="anchored" data-anchor-id="results">4. Results</h3>
-<section id="ablation-experiments" class="level4">
-<h4 class="anchored" data-anchor-id="ablation-experiments">1) Ablation experiments</h4>
-<p><img src="../assets/wham-4.png"></p>
-</section>
-<section id="per-frame-hmr-accracy" class="level4">
-<h4 class="anchored" data-anchor-id="per-frame-hmr-accracy">2) Per-frame HMR accracy</h4>
-<p><img src="../assets/wham-5.png"></p>
-</section>
-<section id="global-motion-estimation-accuracy" class="level4">
-<h4 class="anchored" data-anchor-id="global-motion-estimation-accuracy">3) Global motion estimation accuracy</h4>
-<p><img src="../assets/wham-6.png"></p>
-</section>
-<section id="failure-cases" class="level4">
-<h4 class="anchored" data-anchor-id="failure-cases">4) Failure Cases</h4>
-<p><img src="../assets/wham-7.png"></p>
-<ul>
-<li>wrong trajectory in case of boarding</li>
-<li>No refinement for hand-ground contact</li>
-</ul>
-</section>
-</section>
-<section id="conclusion-and-discussion" class="level3">
-<h3 class="anchored" data-anchor-id="conclusion-and-discussion">5. Conclusion and Discussion</h3>
-<section id="conclusion" class="level4">
-<h4 class="anchored" data-anchor-id="conclusion">1) Conclusion</h4>
-<ul>
-<li>2D-to-3D lifting with image context(= coarse SMPL regression feature)</li>
-<li>Trajectory refinement with foot contact constraints
-<ul>
-<li>Allow non-planar surfaces</li>
-<li>Minimize foot sliding</li>
-</ul></li>
-<li>Efficient online inference using RNN</li>
-</ul>
-</section>
-<section id="discussion" class="level4">
-<h4 class="anchored" data-anchor-id="discussion">2) Discussion</h4>
-<ul>
-<li>Contact constraint can be reformulated to cover more general scenarios</li>
-<li>Is it really real-time? (9fps in online inference, 50fps in 64 batch size without SLAM)</li>
-<li>Applicability for long-range trajectory? (&gt; 1 minute)</li>
-<li>Performance on static camera benchmrks? (Human3.6M, MPI-INF-3DHP)</li>
+<li>단일 RGB이미지에서 SMPL 파라미터를 직접 추정하는 최초의 end-to-end 방법</li>
+<li>ResNet + Iterative Regressor(학습과 inferance시 모두 여러번 반복을 통해서 파라미터 추정)</li>
+<li>입력: 이미지 <span class="math inline">\(I\)</span></li>
+<li>출력: smpl parameter <span class="math inline">\(\Theta\)</span> = (<span class="math inline">\(\theta,\beta, R, t, s\)</span>) 85d</li>
+<li>Adversarial training 으로 사람 형태로 만듦</li>
 </ul>
 
 
-</section>
 </section>
 </section>
 

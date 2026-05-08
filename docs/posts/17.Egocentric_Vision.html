@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="이상민">
-<meta name="dcterms.date" content="2026-01-10">
+<meta name="dcterms.date" content="2026-02-20">
 
-<title>7. WHAM: Reconstructing World-grounded Humans with Accurate 3D Motion(CVPR’24) – paper_code</title>
+<title>17. Egocentric Vision : new task and trend survey – paper_code</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -69,35 +69,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -144,7 +115,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">7. WHAM: Reconstructing World-grounded Humans with Accurate 3D Motion(CVPR’24)</h1>
+      <h1 class="title">17. Egocentric Vision : new task and trend survey</h1>
                       </div>
   </div>
     
@@ -161,7 +132,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 10, 2026</p>
+        <p class="date">February 20, 2026</p>
       </div>
     </div>
     
@@ -180,218 +151,190 @@ window.Quarto = {
 
 
 
-<section id="wham-reconstructing-world-grounded-humans-with-accurate-3d-motioncvpr24" class="level2">
-<h2 class="anchored" data-anchor-id="wham-reconstructing-world-grounded-humans-with-accurate-3d-motioncvpr24">WHAM: Reconstructing World-grounded Humans with Accurate 3D Motion(CVPR’24)</h2>
-<section id="section" class="level3">
-<h3 class="anchored" data-anchor-id="section"></h3>
-<ol start="0" type="1">
-<li>Video-Based HMR Methods</li>
-</ol>
-<section id="camera-centric" class="level4">
-<h4 class="anchored" data-anchor-id="camera-centric">1) Camera-centric</h4>
-</section>
-<section id="카메라를-좌표계-카메라를-기준으로-사람의-3d-포즈를-복원-카메라가-움식이면-사람도-움직임" class="level4">
-<h4 class="anchored" data-anchor-id="카메라를-좌표계-카메라를-기준으로-사람의-3d-포즈를-복원-카메라가-움식이면-사람도-움직임">(카메라를 좌표계 : 카메라를 기준으로 사람의 3D 포즈를 복원, 카메라가 움식이면 사람도 움직임)</h4>
+<section id="egocentric-vision" class="level2">
+<h2 class="anchored" data-anchor-id="egocentric-vision">1. Egocentric Vision</h2>
+<section id="difficulty" class="level3">
+<h3 class="anchored" data-anchor-id="difficulty">1) Difficulty</h3>
 <ul>
-<li>w/o 2D predictions(Image <span class="math inline">\(\rightarrow\)</span> 3D 직접 예측, End-to-end)
-<ul>
-<li>VIBE(CVPR’20), TCMR(CVPR’21), MAED(CVPR,22), GLoT(ICCV’21), etc..</li>
-</ul></li>
-<li>2D-to-3D lifting(Image <span class="math inline">\(\rightarrow\)</span> 2D keypoints <span class="math inline">\(\rightarrow\)</span> 3D pose)
-<ul>
-<li>RGB Video → 2D Pose Detector → Lifting Network → 3D pose</li>
-<li>MotionBERT(ICCV’23)</li>
-<li>장점 : 2D detector는 robust(많은 데이터), 3D GT 없어도 됨</li>
-<li>단점 : Two-stage라서 느림</li>
-</ul></li>
+<li>심각한 self-occlusion</li>
+<li>시점 왜곡</li>
+<li>머리 움직임에 의한 모션 blur</li>
+<li>Long-horizon 특성</li>
 </ul>
 </section>
-<section id="global-trajectory" class="level4">
-<h4 class="anchored" data-anchor-id="global-trajectory">2) Global trajectory</h4>
-</section>
-<section id="세계-좌표계-실제-3d-공간에서의-절대-위치-복원.-카메라가-움직여도-사람은-고정된-위치" class="level4">
-<h4 class="anchored" data-anchor-id="세계-좌표계-실제-3d-공간에서의-절대-위치-복원.-카메라가-움직여도-사람은-고정된-위치">(세계 좌표계 : 실제 3D 공간에서의 절대 위치 복원. 카메라가 움직여도 사람은 고정된 위치)</h4>
+<section id="최근-성장의-원인" class="level3">
+<h3 class="anchored" data-anchor-id="최근-성장의-원인">2) 최근 성장의 원인</h3>
 <ul>
-<li>w/o 2D predictions
-<ul>
-<li>TRACE(CVPR’23)</li>
-<li>장점 : 빠름</li>
-<li>단점 : 3D GT 필요</li>
-</ul></li>
-<li>2D-to-3D lifting
-<ul>
-<li>ProxyCap, WHAM(CVPR’24)</li>
-<li>장점 : 2D detector는 robust(많은 데이터), 3D GT 없어도 됨</li>
-<li>단점 : Two-stage라서 느림</li>
-</ul></li>
-<li>3D postprocessing(3D로 예측 <span class="math inline">\(\rightarrow\)</span> 후처리로 global trajectory 개선
-<ul>
-<li>GLAMR(CVPR’23), SLAHMR(CVPR’24), PACE(3DV’24)</li>
-<li>장점 : 기존 모델 활용, 특정 문제 집중 해결, Flexible</li>
-<li>단점 : 초기 예측에 의존, 추가 computation, pipeline 복잡함</li>
-</ul></li>
-</ul>
-<p><img src="../assets/wham-1.png"></p>
-</section>
-</section>
-<section id="problems" class="level3">
-<h3 class="anchored" data-anchor-id="problems">1. Problems</h3>
-<section id="기존-방법들의-한계" class="level4">
-<h4 class="anchored" data-anchor-id="기존-방법들의-한계">1) 기존 방법들의 한계</h4>
-<ul>
-<li>대부분의 방법들이 카메라 좌표계에서만 인간을 추정</li>
-<li>전역 좌표계 추정 방법들은 평평한 지면을 가정하여 발 미끄러짐 발생</li>
-<li>가장 정확도가 높은 방법들은 최적화 파이프라인을 사용해 오프라인에서만 동작</li>
-<li>비디오 기반 방법들이 단일 프레임 방법보다 오히려 부정확함</li>
-</ul>
-</section>
-<section id="해결하고자-하는-문제" class="level4">
-<h4 class="anchored" data-anchor-id="해결하고자-하는-문제">2) 해결하고자 하는 문제</h4>
-<ul>
-<li>움직이는 카메라로 촬영된 비디오에서 정확하고 효율적인 전역 좌표계 3D human motion reconstruction</li>
-<li>시간적으로 일관되고 발 미끄러짐이 없는 자연스러운 동작 생성</li>
-<li>실시간 또는 실시간에 가까운 처리 속도 달성</li>
-</ul>
-</section>
-<section id="contributions" class="level4">
-<h4 class="anchored" data-anchor-id="contributions">3) Contributions</h4>
-<ul>
-<li>Fuse human motion context and scene context for HMR</li>
-<li>Reduce foot sliding and refine foot contact on non-planar surface</li>
-<li>Effective HMR in global coordinates</li>
-<li>SOTA on in-the-wild benchmarks</li>
+<li>Meta Project Aria, Apple Vision Pro, Meta Quest 3와 같은 기기의 보급</li>
+<li>Ego4D(3,670hour), EgoExo4D 등 대규모 데이터셋 공개</li>
 </ul>
 </section>
 </section>
-<section id="methods" class="level3">
-<h3 class="anchored" data-anchor-id="methods">2. Methods</h3>
-<p><img src="../assets/wham-2.png"></p>
-<section id="preprocessing-module" class="level4">
-<h4 class="anchored" data-anchor-id="preprocessing-module">1) Preprocessing Module</h4>
+<section id="new-task" class="level2">
+<h2 class="anchored" data-anchor-id="new-task">2. new task</h2>
+<section id="episodic-memory-내가-마지막으로-x을-어디서-봤지" class="level3">
+<h3 class="anchored" data-anchor-id="episodic-memory-내가-마지막으로-x을-어디서-봤지">1) Episodic Memory : 내가 마지막으로 x을 어디서 봤지?</h3>
+<section id="a.-task-정의-과거-1인칭-영상을-쿼리-가능한-메모리로-만드는-것" class="level4">
+<h4 class="anchored" data-anchor-id="a.-task-정의-과거-1인칭-영상을-쿼리-가능한-메모리로-만드는-것">A. task 정의 : 과거 1인칭 영상을 쿼리 가능한 메모리로 만드는 것</h4>
+</section>
+<section id="b.-서브-task" class="level4">
+<h4 class="anchored" data-anchor-id="b.-서브-task">B. 서브 task</h4>
 <ul>
-<li>2D detection
-<ul>
-<li>ViTPose</li>
-</ul></li>
-<li>Image encoder pretrained with HMR task
-<ul>
-<li>ResNet-50 from SPIN</li>
-<li>HRNet-W48 from CLIFF</li>
-<li>ViT-H/16 from HMR2.0</li>
-</ul></li>
-<li>These modules are not trained in this work(파인튜닝 하지 않음)</li>
+<li>Visual Queries 2D(VQ2D) : 이미지 크롭으로 쿼리 객채를 주면, 과거 영상에서 해당 물체의 마지막 등장 시점과 위치(bounding box) 찾기</li>
+<li>Natural Language Queries (NLQ) : 자연어 질문에 대해 답이 보이는 시간 구간을 찾기</li>
+<li>Moments Queries (MQ): 특정 활동 이름이 주어지면 해당 활동의 모든 인스턴스를 과거 영상에서 찾기</li>
+<li>Goal Step: 절차적 활동의 자연어 설명이 주어지면 해당 단계의 시간 구간을 찾기</li>
 </ul>
 </section>
-<section id="motion-encoder-and-decoder" class="level4">
-<h4 class="anchored" data-anchor-id="motion-encoder-and-decoder">2) Motion Encoder and Decoder</h4>
+<section id="c.-기존-task와의-차이" class="level4">
+<h4 class="anchored" data-anchor-id="c.-기존-task와의-차이">C. 기존 task와의 차이</h4>
 <ul>
-<li>Unidirectional RNN -&gt; enables online inference</li>
-<li>Motion encoder input
-<ul>
-<li>bbox-normalized 2D keypoints</li>
-<li>Concatenate with box center and scale</li>
-</ul></li>
-<li>Motion encoder
-<ul>
-<li>Add 3D keypoint regression task using separate linear layer on the motion feaure</li>
-</ul></li>
-<li>Feature integrator
-<ul>
-<li>Add image feature for shape parameter regression</li>
-</ul></li>
-<li>Motion decoder
-<ul>
-<li>Outputs : SMPL pose and shape, camera pose, contact probability</li>
-</ul></li>
+<li>기존 비디오 검색은 짧은 클립 단위, 3인칭이었지만, 여기서는 수 시간~수일의 연속 1인칭 영상에서 개인화된 시공간 검색을 수행. AR 글래스의 “기억 보조” 기능과 직결됨</li>
 </ul>
 </section>
-<section id="global-trajectory-decoder" class="level4">
-<h4 class="anchored" data-anchor-id="global-trajectory-decoder">3) Global Trajectory Decoder</h4>
+<section id="d.-관련-논문" class="level4">
+<h4 class="anchored" data-anchor-id="d.-관련-논문">D. 관련 논문</h4>
 <ul>
-<li>Global trajectory devoder
-<ul>
-<li>Regress global root orientation and root velocity</li>
-<li>Append camera angular velocity to the motion feature</li>
-</ul></li>
-<li>Contact-aware trajectory refinement
-<ul>
-<li>Minimize foot sliding using ground contact probability</li>
-<li>Refine trajectory with additional module</li>
-</ul></li>
+<li>OSGNet (CVPR 2025 Challenge 1위)</li>
+<li>ObjectNLQ (CVPR 2024)</li>
+<li>EgoVideo</li>
 </ul>
 </section>
 </section>
-<section id="training" class="level3">
-<h3 class="anchored" data-anchor-id="training">3. Training</h3>
-<p><img src="../assets/wham-3.png"></p>
-<section id="pretraining" class="level4">
-<h4 class="anchored" data-anchor-id="pretraining">1) Pretraining</h4>
+<section id="procedural-error-detection" class="level3">
+<h3 class="anchored" data-anchor-id="procedural-error-detection">2) Procedural Error Detection</h3>
+<section id="a.-task-정의-1인칭-영상에서-절차적-활동-수행-중-실시간으로-실수-감지" class="level4">
+<h4 class="anchored" data-anchor-id="a.-task-정의-1인칭-영상에서-절차적-활동-수행-중-실시간으로-실수-감지">A. task 정의 : 1인칭 영상에서 절차적 활동 수행 중 실시간으로 실수 감지</h4>
+</section>
+<section id="b.-새로운-error-유형egoper-cvpr-2024" class="level4">
+<h4 class="anchored" data-anchor-id="b.-새로운-error-유형egoper-cvpr-2024">B. 새로운 error 유형(EgoPER, CVPR 2024)</h4>
 <ul>
-<li>Use AMASS dataset(SMPL mesh only)</li>
-<li>Generate random camera motion</li>
-<li>Obtain 2D keypoints with camera prejection</li>
+<li>Omission (생략): 필수 단계를 건너뜀</li>
+<li>Addition (추가): 불필요한 단계를 수행</li>
+<li>Modification (변형): 다른 방식으로 수행</li>
+<li>Slip (실수): 의도와 다른 동작 수행</li>
+<li>Correction (교정): 에러 후 자가 수정</li>
 </ul>
 </section>
-<section id="finetuning" class="level4">
-<h4 class="anchored" data-anchor-id="finetuning">2) Finetuning</h4>
+<section id="c.-관련-연구-흐름" class="level4">
+<h4 class="anchored" data-anchor-id="c.-관련-연구-흐름">C. 관련 연구 흐름</h4>
 <ul>
-<li>Studio : Human3.6M, MPI-INF-3DHP</li>
-<li>Outdoor : 3DPW, RICH, EMDB</li>
-<li>No pose GT : InstaVariety</li>
-<li>Synthetic : BEDLAM</li>
-<li>No image : AMASS</li>
+<li>PREGO (CVPR 2024): 최초의 online one-class 실수 감지 모델. 현재 동작 인식 + 다음 동작 예측을 비교하여 불일치를 탐지</li>
+<li>Differentiable Task Graph Learning (NeurIPS 2024 Spotlight): 절차적 활동의 task graph를 미분 가능하게 학습, 실수 감지에 활용</li>
+<li>TI-PREGO: Chain of Thought + In-Context Learning 활용</li>
+<li>ExpertAF: VLM을 활용한 전문가 수준의 피드백 생성</li>
 </ul>
 </section>
-</section>
-<section id="results" class="level3">
-<h3 class="anchored" data-anchor-id="results">4. Results</h3>
-<section id="ablation-experiments" class="level4">
-<h4 class="anchored" data-anchor-id="ablation-experiments">1) Ablation experiments</h4>
-<p><img src="../assets/wham-4.png"></p>
-</section>
-<section id="per-frame-hmr-accracy" class="level4">
-<h4 class="anchored" data-anchor-id="per-frame-hmr-accracy">2) Per-frame HMR accracy</h4>
-<p><img src="../assets/wham-5.png"></p>
-</section>
-<section id="global-motion-estimation-accuracy" class="level4">
-<h4 class="anchored" data-anchor-id="global-motion-estimation-accuracy">3) Global motion estimation accuracy</h4>
-<p><img src="../assets/wham-6.png"></p>
-</section>
-<section id="failure-cases" class="level4">
-<h4 class="anchored" data-anchor-id="failure-cases">4) Failure Cases</h4>
-<p><img src="../assets/wham-7.png"></p>
+<section id="d.-기존-task와의-차이" class="level4">
+<h4 class="anchored" data-anchor-id="d.-기존-task와의-차이">D. 기존 task와의 차이</h4>
 <ul>
-<li>wrong trajectory in case of boarding</li>
-<li>No refinement for hand-ground contact</li>
+<li>기존 anomaly detection은 감시 카메라 기반의 “비정상 행동 감지”였지만, 여기서는 목표 지향적(goal-oriented)으로 “정해진 절차 대비 이탈”을 감지. 의료, 제조, 교육 등에 즉시 적용 가능.</li>
 </ul>
 </section>
 </section>
-<section id="conclusion-and-discussion" class="level3">
-<h3 class="anchored" data-anchor-id="conclusion-and-discussion">5. Conclusion and Discussion</h3>
-<section id="conclusion" class="level4">
-<h4 class="anchored" data-anchor-id="conclusion">1) Conclusion</h4>
+<section id="ego-exo-transfer" class="level3">
+<h3 class="anchored" data-anchor-id="ego-exo-transfer">3) Ego-Exo Transfer</h3>
+<section id="a.-task-정의-1인칭과-3인칭-영상의-대응-관계를-학습하고-변환" class="level4">
+<h4 class="anchored" data-anchor-id="a.-task-정의-1인칭과-3인칭-영상의-대응-관계를-학습하고-변환">A. Task 정의 : 1인칭과 3인칭 영상의 대응 관계를 학습하고 변환</h4>
+</section>
+<section id="b.-서브-taskegoexo4d-challenge-2025" class="level4">
+<h4 class="anchored" data-anchor-id="b.-서브-taskegoexo4d-challenge-2025">B. 서브 task(EgoExo4D challenge 2025)</h4>
 <ul>
-<li>2D-to-3D lifting with image context(= coarse SMPL regression feature)</li>
-<li>Trajectory refinement with foot contact constraints
-<ul>
-<li>Allow non-planar surfaces</li>
-<li>Minimize foot sliding</li>
-</ul></li>
-<li>Efficient online inference using RNN</li>
+<li>Ego-Exo Viewpoint Correspondences: 동기화된 ego/exo 영상에서 공간적 대응점 찾기</li>
+<li>Proficiency/Skill Estimation: 1인칭+3인칭 영상으로부터 수행자의 숙련도 평가</li>
+<li>Cross-view Action Recognition: 한쪽 시점에서 학습하여 다른 시점에서 인식</li>
+<li>Exo2Ego Synthesis: 3인칭 영상에서 1인칭 뷰를 합성 (Diffusion 기반)</li>
 </ul>
 </section>
-<section id="discussion" class="level4">
-<h4 class="anchored" data-anchor-id="discussion">2) Discussion</h4>
+<section id="c.-기존-task와의-차이-1" class="level4">
+<h4 class="anchored" data-anchor-id="c.-기존-task와의-차이-1">C. 기존 task와의 차이</h4>
 <ul>
-<li>Contact constraint can be reformulated to cover more general scenarios</li>
-<li>Is it really real-time? (9fps in online inference, 50fps in 64 batch size without SLAM)</li>
-<li>Applicability for long-range trajectory? (&gt; 1 minute)</li>
-<li>Performance on static camera benchmrks? (Human3.6M, MPI-INF-3DHP)</li>
+<li>기존에는 각 시점을 독립적으로 다뤘지만, 두 시점을 동시에 모델링하는 것이 차세대 AI 에이전트(로봇 학습, AR 가이드 등)의 핵심. “유튜브 DIY 영상(3인칭)을 보고 내 시점(1인칭)에서 따라하기”에 해당.</li>
+</ul>
+</section>
+</section>
+<section id="egocentric-bodyhand-motion-reconstruction" class="level3">
+<h3 class="anchored" data-anchor-id="egocentric-bodyhand-motion-reconstruction">4. Egocentric Body/Hand Motion Reconstruction</h3>
+<section id="a.-task-정의" class="level4">
+<h4 class="anchored" data-anchor-id="a.-task-정의">A. task 정의</h4>
+<ul>
+<li>Head-Mounted Device의 센서(SLAM pose + 카메라)만으로 착용자의 3D 전신 포즈, 손 포즈, 키를 추정</li>
+</ul>
+</section>
+<section id="b.-핵심-연구" class="level4">
+<h4 class="anchored" data-anchor-id="b.-핵심-연구">B. 핵심 연구</h4>
+<ul>
+<li>EgoAllo (2024): SLAM pose + 이미지 → Diffusion 모델로 3D body pose + height + hand parameters 추정. Allocentric(씬 좌표계)에서의 motion 복원</li>
+<li>UniEgoMotion (2025): Reconstruction, Forecasting, Generation을 하나의 모델로 통합. 새로운 태스크 2개를 제안 — Egocentric Motion Generation (단일 ego 이미지 → 모션 생성), Egocentric Motion Forecasting (과거 ego 입력 → 미래 모션 예측)</li>
+<li>EgoHandICL (ICLR 2026): In-Context Learning을 3D 손 복원에 최초 적용. VLM으로 exemplar를 검색하고, MAE 기반 아키텍처로 심한 폐색에서도 강건한 손 복원 달성</li>
+</ul>
+</section>
+<section id="c.-기존-task와의-차이-2" class="level4">
+<h4 class="anchored" data-anchor-id="c.-기존-task와의-차이-2">C. 기존 task와의 차이</h4>
+<ul>
+<li>기존 motion capture는 외부 카메라 필요. 여기서는 착용자가 보이지 않는 상태에서 자기 자신의 동작을 추정. “출력”이 전통적 hand pose를 넘어 전신+손+키+씬 정합으로 확장됨.</li>
+</ul>
+</section>
+</section>
+<section id="egocentric-3d-scene-reconstruction" class="level3">
+<h3 class="anchored" data-anchor-id="egocentric-3d-scene-reconstruction">5) Egocentric 3D Scene Reconstruction</h3>
+<section id="a.-task-정의-1" class="level4">
+<h4 class="anchored" data-anchor-id="a.-task-정의-1">A. task 정의</h4>
+<ul>
+<li>머리에 장착된 카메라의 ego-motion 영상으로부터 고품질 3D 씬 복원</li>
+</ul>
+</section>
+<section id="b.-핵심-연구-1" class="level4">
+<h4 class="anchored" data-anchor-id="b.-핵심-연구-1">B. 핵심 연구</h4>
+<ul>
+<li>Egocentric Splats (SIGGRAPH 2025, Meta): Project Aria/Quest 3 기기의 rolling-shutter, motion blur, IMU 등을 고려한 3D Gaussian Splatting. 기존 3DGS 대비 egocentric-specific 문제(빠른 머리 움직임, 조명 변화 등)를 해결</li>
+<li>EgoLifter (2024): Egocentric 비디오에서 open-world 3D instance segmentation. 3DGS + SAM contrastive feature를 결합하여 고정 taxonomy 없이 임의 물체 인스턴스를 분할</li>
+<li>HOT3D (CVPR 2025 Highlight): Meta의 Project Aria + Quest 3로 촬영한 1.5M 멀티뷰 프레임의 hand-object tracking 데이터셋. 3D hand/object pose GT 제공</li>
+</ul>
+</section>
+<section id="c.-기존-task와의-차이-3" class="level4">
+<h4 class="anchored" data-anchor-id="c.-기존-task와의-차이-3">C. 기존 task와의 차이</h4>
+<ul>
+<li>기존 3D reconstruction은 정적 카메라나 드론 영상 기반. 항상 움직이는 사람의 머리에서 촬영된 영상은 rolling shutter, motion blur, 급격한 시점 변화라는 고유한 문제를 가짐. AR 글래스의 실시간 씬 이해에 필수.</li>
+</ul>
+</section>
+</section>
+<section id="d.-egocentric-vision의-vla로의-연결" class="level3">
+<h3 class="anchored" data-anchor-id="d.-egocentric-vision의-vla로의-연결">D. Egocentric Vision의 VLA로의 연결</h3>
+<section id="a.-task-정의-2" class="level4">
+<h4 class="anchored" data-anchor-id="a.-task-정의-2">A. task 정의</h4>
+<ul>
+<li>대규모 1인칭 인간 행동 영상을 로봇의 Vision-Language-Action 모델 학습에 활용</li>
+</ul>
+</section>
+<section id="b.-핵심-연구-2" class="level4">
+<h4 class="anchored" data-anchor-id="b.-핵심-연구-2">B. 핵심 연구</h4>
+<ul>
+<li>EgoVLA (2025): 1인칭 인간 영상으로부터 VLA 모델을 학습. 인간 손동작을 proxy robot action으로 활용</li>
+<li>PhysBrain (2025): Egocentric 인간 영상이 VLM→VLA 변환의 다리 역할. Qwen3VL을 ego 데이터로 파인튜닝하여 egocentric 이해력 향상 → 로봇 조작 성능 개선</li>
+<li>Being-H0 (2025): 대규모 인간 영상으로 VLA 사전학습</li>
+<li>InterVLA (ICCV 2025): 1인칭 인간-물체 상호작용 데이터셋(3.9K 시퀀스, 11.4시간). Ego+exo RGB, 언어 명령, 고정밀 인간/물체 모션 제공</li>
+</ul>
+</section>
+<section id="c.-기존-task와의-차이-4" class="level4">
+<h4 class="anchored" data-anchor-id="c.-기존-task와의-차이-4">C. 기존 task와의 차이</h4>
+<ul>
+<li>로봇 데모 데이터는 비싸고 제한적이지만, 1인칭 인간 영상은 스케일이 거의 무한. 입력 데이터 소스 자체가 바뀌는 패러다임 전환. “인간이 일상에서 찍은 영상 → 로봇이 배우는 데이터”</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="향후-연구-방향" class="level2">
+<h2 class="anchored" data-anchor-id="향후-연구-방향">4. 향후 연구 방향</h2>
+<ul>
+<li>Ego 영상 기반 World Model: 1인칭 영상에서 물리 법칙을 이해하는 world model 학습 → 로봇/VLA의 시뮬레이션 없는 학습</li>
+<li>Always-on Egocentric AI Assistant: EgoLife 프로젝트처럼 수일~수주의 연속 기록에서 개인화된 AI 비서 구축</li>
+<li>Ego + Tactile/Force 센서 융합: 시각 + 촉각 멀티모달로 dexterous manipulation 이해 (VLA-Touch, Tactile-VLA)</li>
+<li>Open-vocabulary Egocentric Understanding: 고정된 action class 없이 자유 형태 언어로 ego 영상 쿼리</li>
+<li>Real-time On-device Ego Perception: 경량 모델로 AR 글래스 위에서 실시간 동작</li>
 </ul>
 
 
-</section>
-</section>
 </section>
 
 </main> <!-- /main -->
