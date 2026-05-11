@@ -259,6 +259,7 @@ window.Quarto = {
 <h4 class="anchored" data-anchor-id="cliff2022의-해결책-및-한계">2) CLIFF(2022)의 해결책 및 한계</h4>
 <p><img src="../assets/metric-2.png"></p>
 <ul>
+<li>encoder: ResNet-50 사용</li>
 <li>bbox 좌표(<span class="math inline">\(c_x, c_y, b\)</span>)- center x, center y, bbox size b를 focal length로 정규화 후 feature에 concat함
 <ul>
 <li>bbox info를 통해 위치정보를 반영해 왜곡을 학습</li>
@@ -282,9 +283,9 @@ window.Quarto = {
 </ul>
 <p><img src="../assets/metric-3.png"></p>
 <ul>
-<li>HMR의 scale대신 카메라로부터의 depth(<span class="math inline">\(t_z\)</span>)를 사용함
+<li>HMR의 scale과 focal length로부터 카메라로부터의 depth(<span class="math inline">\(t_z\)</span>)를 계산함
 <ul>
-<li>full-perspective projection</li>
+<li>처음부터 <span class="math inline">\(t_z\)</span>를 추정하는 것이 아니기 때문에 완전한 full-perspective projection이 아님</li>
 </ul></li>
 <li>한계
 <ul>
@@ -304,8 +305,94 @@ window.Quarto = {
 </ul>
 </section>
 </section>
+<section id="camera-hmr3dv2025" class="level3">
+<h3 class="anchored" data-anchor-id="camera-hmr3dv2025">4. Camera HMR(3DV’2025)</h3>
+<section id="humanfov" class="level4">
+<h4 class="anchored" data-anchor-id="humanfov">1) HumanFoV</h4>
+<ul>
+<li>최초의 이미지에서 vertical FoV(Field of View)만을 예측하는 모델</li>
+<li>EXIF(500K images) datasets을 제안</li>
+<li>HRNet + MLP 구조 사용</li>
+<li>HRNet(High Resolution Network): 네트워크 층을 깊게 통과해도 이미지의 고해상도 공간 정부를 끝까지 유지하는 특징이 있음, Perspective distortion에 의한 변화는 미세한 픽셀 단위 스케일 차이에서 오므로 적합함</li>
+<li>focal length를 모르는 상황에서 자동으로 추정할 수 있음</li>
+</ul>
+</section>
+<section id="fov-focal-length-변환" class="level4">
+<h4 class="anchored" data-anchor-id="fov-focal-length-변환">1-1) FoV focal length 변환</h4>
+<ul>
+<li><span class="math inline">\(\upsilon = 2 \cdot \text{arctan} \left( \frac{sh}{2f} \right)\)</span> <span class="math inline">\(\rightarrow \quad f = \frac{sh}{2 \cdot \text{tan} \left(\frac{\upsilon}{2}\right)}\)</span></li>
+<li><span class="math inline">\(\upsilon\)</span>: vertical FoV</li>
+<li><span class="math inline">\(sh\)</span>: 센서의 세로 길이
+<ul>
+<li>기기마다 물리적인 센서의 크기가 다름</li>
+<li><span class="math inline">\(FocalLengthIn35mmFormat\)</span> 데이터, 표준 35mm 풀프레임 카메라 (36mm x 24mm)크기 센서로 찍었으면 focal length가 몇 mm였을지 환산된 데이터.</li>
+<li><span class="math inline">\(\rightarrow\)</span> 가로사진 24mm, 세로사진 36mm 사용</li>
+</ul></li>
+<li><span class="math inline">\(f\)</span>: focal length</li>
+</ul>
+<hr>
+<ul>
+<li><span class="math inline">\(f_y = f \times \frac{H}{sh} = f = \frac{H}{2 \cdot \text{tan} \left(\frac{\upsilon}{2}\right)}\)</span></li>
+<li><span class="math inline">\(H\)</span>: image height</li>
+</ul>
+<p><img src="../assets/metric-12.png"></p>
+</section>
+<section id="pseudo-gt-품질-개선" class="level4">
+<h4 class="anchored" data-anchor-id="pseudo-gt-품질-개선">2) Pseudo GT 품질 개선</h4>
+<ul>
+<li>HMR의 근본적 문제는, in-the-wild 이미지에 대한 3D GT가 없다는 것</li>
+<li>기존의 pGT
+<ul>
+<li>이미지에서 2D keypoint를 찍고 SMPLify로 SMPL을 키포인트에 fitting하여 SMPL parameter를 얻음</li>
+<li>SMPLify는 weak-perspective 카메라를 가정, 실제 카메라는 full-perspective <span class="math inline">\(\rightarrow\)</span> foreshortening이 심할때 2D 키포인트는 잘 맞지만 3D 포즈가 비현실적</li>
+<li>keypoint가 17개로 너무 sparse함, 체형은 거의 제약이 없음</li>
+</ul></li>
+</ul>
+<p><img src="../assets/metric-13.png"></p>
+<ul>
+<li>해결
+<ul>
+<li>CamSMPLify:
+<ul>
+<li>HumanFoV로 추정한 FoV로 focal length를 계산</li>
+<li>full-perspective camera model로 SMPLify를 다시 수행</li>
+<li>기존 SMPLify의 weak-perspective를 full-perspective로 교체(scale 대신 <span class="math inline">\(t_z\)</span>를 추정함) <span class="math display">\[J_{2D} = s \cdot \Pi(R \cdot J_{3D}) + t_{xy}\]</span> <span class="math display">\[J_{2D} = K \cdot (R \cdot J_{3D} + t_{3D})\]</span> <span class="math display">\[x_{2D} = f \cdot \frac{X_{3D}}{Z_{3D}} + c_x\]</span></li>
+</ul></li>
+<li>DenseKP
+<ul>
+<li>BEDLAM과 AGORA 합성 데이터셋으로 DenseKP(dense surpace keypoint detector)를 학습</li>
+<li>138개의 surface keypoint 추정</li>
+<li>ViTPose architecture 사용</li>
+<li>뚱뚱하거나 마른 사람의 shape parameter <span class="math inline">\(\beta\)</span>의 정확도 개선</li>
+</ul></li>
+<li>Iterative Refinement
+<ul>
+<li>CameraHMR모델 학습과 SMPLify 피팅을 반복적으로 수행, CameraHMR의 출력을 SMPLify 초기값으로 사용하면 수렴이 더 잘되고 개선된 pGT로 다시 cameraHMR을 학습하면 모델이 더 좋아지는 순환 구조</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="full-perspective-hmr" class="level4">
+<h4 class="anchored" data-anchor-id="full-perspective-hmr">3) full-perspective HMR</h4>
+<p><img src="../assets/metric-14.png"></p>
+<ul>
+<li>HMR 2.0 아키텍처를 거의 그대로 사용하지만, decoder가 image token뿐만 아니라 bounding box token, focal length token에서 cross-attention 하도록 수정
+<ul>
+<li>s(가짜 스케일) 대신 실제 카메라와의 물리적 거리 <span class="math inline">\(t_z\)</span>를 포함한 full-perspective 3D parameter를 출력 가능</li>
+</ul></li>
+</ul>
+</section>
+<section id="한계" class="level4">
+<h4 class="anchored" data-anchor-id="한계">4) 한계</h4>
+<ul>
+<li>Feature entanglement: 모든 patch token이 같은 FFN을 통과해, 하나의 feature에 pose 정보와 position 정보가 뒤섞여 있음, 하나를 수정하면 다른 것도 영향을 받음</li>
+<li>Focal length 추정 오차의 전파(cascading error): HumanFoV가 틀리면 HMR도 틀려짐</li>
+<li>Pixel-level metric이 아님. 여전히 CLIFF와 같이 이미지 feature에 동일하게 concat됨, 여전히 픽셀별 차이를 표현할 수 없음 <span class="math inline">\(\rightarrow\)</span> 왜곡이 무시됨</li>
+</ul>
+</section>
+</section>
 <section id="moemixture-of-experts" class="level3">
-<h3 class="anchored" data-anchor-id="moemixture-of-experts">4. MoE(Mixture of Experts)</h3>
+<h3 class="anchored" data-anchor-id="moemixture-of-experts">5. MoE(Mixture of Experts)</h3>
 <p><img src="../assets/metric-4.png"></p>
 <section id="일반-transformer의-ffn" class="level4">
 <h4 class="anchored" data-anchor-id="일반-transformer의-ffn">1) 일반 Transformer의 FFN</h4>
@@ -323,21 +410,122 @@ window.Quarto = {
 <li><span class="math inline">\(\mathbf{x} \in \mathbb{R}^D\)</span></li>
 <li><span class="math inline">\(e_i\)</span>: expert <span class="math inline">\(i\)</span>의 funtion <span class="math inline">\(\mathbb{R}^D \mapsto\mathbb{R}^D\)</span></li>
 <li><span class="math inline">\(e_i(\mathbf{x}) = \text{MLP}_{\theta_i}(\mathbf{x})\)</span></li>
-<li><span class="math inline">\(g\)</span>: expert에 대한 가중치를 정하는 function</li>
+<li><span class="math inline">\(g\)</span>: expert들에 대한 가중치를 정하는 routing function <span class="math inline">\(\mathbb{R}^D \mapsto\mathbb{R}^E\)</span></li>
 <li><span class="math inline">\(g(\mathbf{x}) = \text{TOP}_k(\text{softmax}(\mathbf{W}\mathbf{x}+ \epsilon))\)</span></li>
 <li>핵심: 서로 다른 종류의 token이 서로 다른 expert(FFN)로 가면서 자연스럽게 specialization이 일어남</li>
-<li><h4 id="load-balancing-loss" class="anchored">3) Load Balancing Loss</h4></li>
-<li>문제: 학습 초기에 특정 expert가 우연히 좋은 결과를 내면, router가 그 expert로 점점 더 많은 token을 보냄, 나머지 expert는 학습이 되지 않음</li>
-<li>몇몇 expert만 사용되고 대부분의 expert가 사용되지 않음</li>
-<li><span class="math inline">\(\rightarrow\)</span> load balancing loss를 추가해 token이 expert들에 골고루 분배되도록 유도</li>
-<li>해결: auxiliary loss로 expert 간 token 배분을 균등하게 유도</li>
+</ul>
+</section>
+<section id="load-balancing-loss" class="level4">
+<h4 class="anchored" data-anchor-id="load-balancing-loss">3) Load Balancing Loss</h4>
+<ul>
+<li><p>문제: 학습 초기에 특정 expert가 우연히 좋은 결과를 내면, router가 그 expert로 점점 더 많은 token을 보냄, 나머지 expert는 학습이 되지 않음</p></li>
+<li><p>몇몇 expert만 사용되고 대부분의 expert가 사용되지 않음</p></li>
+<li><p><span class="math inline">\(\rightarrow\)</span> load balancing loss(auxiliary loss)를 추가해 token이 expert들에 골고루 분배되도록 유도</p></li>
+<li><p>입력 배치 X에서 개별 토큰과 routing function의 가중치곱 <span class="math inline">\(W\)</span>의 softmax의 합, expert <span class="math inline">\(i\)</span>에 대한 값은 벡터의 i번째 값</p></li>
+</ul>
+<p><img src="../assets/metric-6.png"> - Importance Loss: 각각의 expert의 importance에 대한 변동 계수: 분산을 평균의 제곱으로 나눈 값, 한 전문가만 독식하면 분산이 매우 커짐</p>
+<ul>
+<li><p>importance loss로 확률을 비슷하게 맞춰도 Top k 선택 과정을 거치면 실제 배정되는 토큰 수는 여전히 불균형일 수 있음, load loss는 실제로 각 전문가에게 할당되는 토큰의 개수를 균등하게 맞춰줌</p></li>
+<li><p><span class="math inline">\(\text{threshold}_k(x)\)</span>: 어떤 토큰 <span class="math inline">\(x\)</span>에 대해 k번째 높은 점수를 구한 것 <img src="../assets/metric-7.png"></p></li>
+<li><p>Top k 연산은 미분이 안되서 backpropagation 불가능</p></li>
+<li><p>노이즈 <span class="math inline">\(\epsilon_{new}\)</span>를 추가했을 때 <span class="math inline">\(i\)</span>번째 expert의 점수가 threshold를 넘을 확률</p></li>
+<li><p><span class="math inline">\(\epsilon_{new} \sim \mathbf{N}(0, \sigma^2)\)</span>을 가정하여 확률 계산</p></li>
+</ul>
+<p><img src="../assets/metric-8.png"></p>
+<ul>
+<li>입력배치 X에서 expert <span class="math inline">\(i\)</span>가 개별 토큰 x에 대해 threshold를 넘을 확률의 합</li>
+</ul>
+<p><img src="../assets/metric-8-1.png"></p>
+<ul>
+<li>Load Loss: 각각의 expert에 대한 P(<span class="math inline">\(i\)</span>) 의 변동 계수</li>
+</ul>
+<p><img src="../assets/metric-9.png"></p>
+<ul>
+<li>auxiliary loss: Importance Loss와 Load Loss의 평균</li>
+</ul>
+<p><img src="../assets/metric-10.png"></p>
+<p><img src="../assets/metric-11.png"></p>
+</section>
+</section>
+<section id="depth-estimator" class="level3">
+<h3 class="anchored" data-anchor-id="depth-estimator">6. depth estimator</h3>
+<ul>
+<li>대부분의 depth estimator는 상대적 깊이를 출력해 scale ambiguity 존재</li>
+<li>픽셀을 그저 딥러닝 패텅느로 맞춰서 사람에 대해 특화되어 있지 않음</li>
+</ul>
+</section>
+<section id="metrichmsrcvpr2026" class="level3">
+<h3 class="anchored" data-anchor-id="metrichmsrcvpr2026">7. MetricHMSR(CVPR’2026)</h3>
+<section id="abstract" class="level4">
+<h4 class="anchored" data-anchor-id="abstract">1) Abstract</h4>
+<ul>
+<li>단일 이미지에서 metric scale human mesh + sence 를 단일 network로 end-to-end로 동시 복원</li>
+<li>ray map으로 metric 복원, HumanMoE로 pose/position을 disentangle, 복원된 사람을 anchor로 scene depth를 보정</li>
 </ul>
 </section>
 </section>
-<section id="camera-hmr3dv2025" class="level3">
-<h3 class="anchored" data-anchor-id="camera-hmr3dv2025">4. Camera HMR(3DV’2025)</h3>
+<section id="연구-목적" class="level3">
+<h3 class="anchored" data-anchor-id="연구-목적">2) 연구 목적</h3>
+<ul>
+<li>기존의 문제
+<ul>
+<li>Humans in 4D, Vibe, Pymaf 같은 모델들은 여전히 weak-perspective 사용</li>
+<li>외부 모듈 의존: TRAM/BLADE같은 방법은 외부 depth estimator 모델에 의존 <span class="math inline">\(\rightarrow\)</span> cascading error + 복잡한 pipeline</li>
+<li>Feature entanglement: 기존의 모델들은 하나의 네트워크로 pose도 맞추가 절대적 거리<span class="math inline">\(t_z\)</span>도 맞춰야함, local pose와 global position을 구분 못함 entangle되어 하나를 수정하면 다른 것도 흔들림</li>
+</ul></li>
+</ul>
+<section id="architecture" class="level4">
+<h4 class="anchored" data-anchor-id="architecture">3) Architecture</h4>
+<p><img src="../assets/metric-15.png"></p>
+<ul>
+<li>input: A single monocular RGB image + K</li>
+</ul>
+</section>
+<section id="pixel-aligned-camera-ray-map" class="level4">
+<h4 class="anchored" data-anchor-id="pixel-aligned-camera-ray-map">3-1) Pixel-Aligned Camera Ray Map</h4>
+<ul>
+<li><p><span class="math inline">\(K(f_x,f_y,c_x,c_y)\)</span>는 알고 있다고 가정</p>
+<ul>
+<li>모를 때는 VGGT 외부 모델로 focal length 추정</li>
+</ul></li>
+<li><p>원본 이미지 pixel(<span class="math inline">\(u, v\)</span>)의 Ray: <span class="math display">\[d = K^{-1} \cdot \begin{pmatrix} u &amp; v &amp; 1 \end{pmatrix}^T\]</span></p></li>
+<li><p>Crop 후 변환된 intrinsic <span class="math inline">\(K'\)</span>: <span class="math display">\[K' = \begin{pmatrix} f_x/s &amp; 0 &amp; (c_x - u_{bbox})/s \\0 &amp; f_y/s &amp; (c_y - v_{bbox})/s \\ 0&amp; 0&amp; 1\end{pmatrix}\]</span></p></li>
+<li><p><span class="math inline">\((u_{bbox}, v_{bbox})\)</span>: crop bbox의 top-left, <span class="math inline">\(s\)</span>: scaling factor</p></li>
+<li><p>bbox top-left를 원점으로 이동</p>
+<ul>
+<li><span class="math inline">\(u_{crop} = u - u_{bbox}\)</span></li>
+<li><span class="math inline">\(v_{crop} = v - v_{bbox}\)</span></li>
+</ul></li>
+<li><p>resize: s로 나눔</p>
+<ul>
+<li><span class="math inline">\(u' = u_{crop} /s = (u- u_{bbox})/s\)</span></li>
+<li><span class="math inline">\(v' = v_{crop} /s = (v- v_{bbox})/s\)</span></li>
+</ul></li>
+<li><p><span class="math inline">\(u'\)</span>에 <span class="math inline">\(u=f_x \cdot(X/Z) + c_x\)</span> 대입</p></li>
+<li><p><span class="math inline">\(u' =(f_x\cdot(X/Z) + c_x - u_{bbox}) /s = (f_x / s) \cdot (X/Z) + (c_x - u_{bbox}) /s\)</span></p></li>
+<li><p><span class="math inline">\(K'^{-1}\)</span>을 구해서 각 픽셀에 적용해 원본 이미지 기준의 ray direction을 구함: H x W x 3 ray map 을 구함 #### 3-2) HumanMoE</p></li>
+</ul>
+<p><img src="../assets/metric-16.png"></p>
+<ul>
+<li>4개의 routed image expert: 서로 다른 시각적 지식 학습</li>
+<li>1개의 shared image expert: 모든 token이 공유하는 공통 지식 학습, expert collapse를 방지하고, 범용적 패턴이 특정 expert에 중복 학습되는 것을 막음</li>
+<li>1개의 ray expert: ray map token만 처리</li>
+<li>Soft MoE를 사용(Top k대신)</li>
+<li>HumanMoE:patch MoE + global MoE
+<ul>
+<li>patch MoE: image patch token을 semantic에 따라 다른 expert로 routing, 비슷한 body part가 같은 expert로 가는 specialization</li>
+<li>Global MoE: full-image representation을 집약해 전체적 context 파악</li>
+</ul></li>
+</ul>
+<p><img src="../assets/metric-17.png"></p>
+<p><img src="../assets/metric-18.png"></p>
+</section>
+<section id="human-guided-metric-depth-refinement" class="level4">
+<h4 class="anchored" data-anchor-id="human-guided-metric-depth-refinement">3-3) Human-Guided Metric Depth Refinement</h4>
+<p><img src="../assets/metric-19.png"></p>
 
 
+</section>
 </section>
 </section>
 
