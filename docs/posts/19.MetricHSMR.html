@@ -200,11 +200,7 @@ window.Quarto = {
 <p><img src="../assets/metric-1.png" height="200" width="500"></p>
 <section id="extrinsic-prameter" class="level4">
 <h4 class="anchored" data-anchor-id="extrinsic-prameter">1) Extrinsic Prameter</h4>
-<ul>
-<li><span class="math inline">\(t \in \mathbb{R}^{3\times 1}\)</span> <span class="math display">\[X_c = R \cdot X_w + t\]</span></li>
-<li>translation 행렬 t: 모든 좌표의 기준점이 카메라 렌즈의 중심으로 옮겨짐</li>
-<li>rotation 행렬 R: 월드의 축들이 회전해 카메라 z,x,y로 옮겨짐</li>
-</ul>
+<p><span class="math display">\[t \in \mathbb{R}^{3\times 1}\]</span> <span class="math display">\[R \in \mathbb{R}^{3\times 3}\]</span> <span class="math display">\[X_c = R \cdot X_w + t\]</span> - translation 행렬 t: 모든 좌표의 기준점이 카메라 렌즈의 중심으로 옮겨짐 - rotation 행렬 R: 월드의 축들이 회전해 카메라 z,x,y로 옮겨짐</p>
 </section>
 <section id="intrinsic-parameter-calibration-matrix" class="level4">
 <h4 class="anchored" data-anchor-id="intrinsic-parameter-calibration-matrix">2) Intrinsic Parameter: Calibration Matrix</h4>
@@ -212,29 +208,29 @@ window.Quarto = {
 </section>
 <section id="perspective-projection-3dcamera-coordinate-rightarrow-2dimage-coordinate" class="level4">
 <h4 class="anchored" data-anchor-id="perspective-projection-3dcamera-coordinate-rightarrow-2dimage-coordinate">3) Perspective Projection: 3D(camera coordinate) <span class="math inline">\(\rightarrow\)</span> 2D(image coordinate)</h4>
-<p><span class="math display">\[X_i = \begin{pmatrix} u \\ v \\ 1 \end{pmatrix} = K \cdot \begin{pmatrix} x_c/z_c \\ y_c/z_c \\ z_c/z_c \end{pmatrix} = \begin{pmatrix} f_x &amp; 0 &amp; c_x \\ 0 &amp;f_y &amp; c_y \\ 0 &amp; 0 &amp; 1 \end{pmatrix}\begin{pmatrix} x_c/z_c \\ y_c/z_c \\ 1 \end{pmatrix}\]</span> <span class="math display">\[u = f_x \cdot \frac{x_c}{z_c} + c_x\]</span> <span class="math display">\[v = f_y \cdot \frac{y_c}{z_c} + c_y\]</span> - <span class="math inline">\(Z\)</span>로 나누는 것: 원근법의 수학적 표현, 김피가 크면 이미지에서 작게 보이도록</p>
+<p><span class="math display">\[X_i = \begin{pmatrix} u \\ v \\ 1 \end{pmatrix} = K \cdot \begin{pmatrix} x_c/z_c \\ y_c/z_c \\ z_c/z_c \end{pmatrix} = \begin{pmatrix} f_x &amp; 0 &amp; c_x \\ 0 &amp;f_y &amp; c_y \\ 0 &amp; 0 &amp; 1 \end{pmatrix}\begin{pmatrix} x_c/z_c \\ y_c/z_c \\ 1 \end{pmatrix}\]</span> <span class="math display">\[u = f_x \cdot \frac{x_c}{z_c} + c_x\]</span> <span class="math display">\[v = f_y \cdot \frac{y_c}{z_c} + c_y\]</span> - <span class="math inline">\(Z\)</span>로 나누는 것: 원근법의 수학적 표현, 깊이가 크면 이미지에서 작게 보이도록</p>
 </section>
 <section id="backprojection-2d-rightarrow-3d-ray-map" class="level4">
 <h4 class="anchored" data-anchor-id="backprojection-2d-rightarrow-3d-ray-map">4) Backprojection: 2D <span class="math inline">\(\rightarrow\)</span> 3D (Ray Map)</h4>
+<p><span class="math display">\[X_i = \begin{pmatrix} u \\ v \\ 1 \end{pmatrix} = K \cdot X_c/z_c\]</span> <span class="math display">\[d = X_c/z_c = K^{-1}\begin{pmatrix} u \\ v \\ 1 \end{pmatrix}\]</span></p>
 <ul>
-<li><p><span class="math inline">\(X_i = \begin{pmatrix} u \\ v \\ 1 \end{pmatrix} = K \cdot X_c/z_c\)</span> <span class="math display">\[d = X_c/z_c = K^{-1}\begin{pmatrix} u \\ v \\ 1 \end{pmatrix}\]</span></p></li>
-<li><p>d: ray direction</p></li>
-<li><p>각 픽셀에 <span class="math inline">\(K^{-1}\)</span>을 곱해서 그 pixel을 통과하는 3D 방향 벡터를 얻음</p></li>
-<li><p>ray map <span class="math inline">\(\mathbb{R}^{H \times W \times 3}\)</span> <span class="math display">\[K^{-1} = \begin{pmatrix} \frac{1}{f_x} &amp; 0 &amp; -\frac{c_x}{f_x} \\ 0 &amp; \frac{1}{f_y} &amp; -\frac{c_y}{f_y} \\ 0 &amp; 0 &amp; 1 \end{pmatrix}\]</span></p></li>
+<li>d: ray direction</li>
+<li>각 픽셀에 <span class="math inline">\(K^{-1}\)</span>을 곱해서 그 pixel을 통과하는 3D 방향 벡터를 얻음</li>
+<li>ray map <span class="math inline">\(\mathbb{R}^{H \times W \times 3}\)</span> <span class="math display">\[K^{-1} = \begin{pmatrix} \frac{1}{f_x} &amp; 0 &amp; -\frac{c_x}{f_x} \\ 0 &amp; \frac{1}{f_y} &amp; -\frac{c_y}{f_y} \\ 0 &amp; 0 &amp; 1 \end{pmatrix}\]</span></li>
 </ul>
-<ol start="5" type="1">
-<li>weak vs full-perspective projection</li>
-</ol>
+</section>
+<section id="weak-vs-full-perspective-projection" class="level4">
+<h4 class="anchored" data-anchor-id="weak-vs-full-perspective-projection">5) weak vs full-perspective projection</h4>
 <ul>
 <li>full-perspective projection
 <ul>
-<li>u = f · (X / Z) + cx</li>
-<li>v = f · (Y / Z) + cy</li>
+<li><span class="math display">\[u = f · (X / Z) + c_x\]</span></li>
+<li><span class="math display">\[v = f · (Y / Z) + c_y\]</span></li>
 </ul></li>
 <li>weak-perspective projection
 <ul>
-<li>u = s · X + tx</li>
-<li>u = s · X + ty</li>
+<li><span class="math display">\[u = s · X + t_x\]</span></li>
+<li><span class="math display">\[v = s · X + t_y\]</span></li>
 </ul></li>
 <li>f/z = s</li>
 </ul>
@@ -320,7 +316,7 @@ window.Quarto = {
 <section id="fov-focal-length-변환" class="level4">
 <h4 class="anchored" data-anchor-id="fov-focal-length-변환">1-1) FoV focal length 변환</h4>
 <ul>
-<li><span class="math inline">\(\upsilon = 2 \cdot \text{arctan} \left( \frac{sh}{2f} \right)\)</span> <span class="math inline">\(\rightarrow \quad f = \frac{sh}{2 \cdot \text{tan} \left(\frac{\upsilon}{2}\right)}\)</span></li>
+<li><span class="math display">\[\upsilon = 2 \cdot \text{arctan} \left( \frac{sh}{2f} \right) \rightarrow \quad f = \frac{sh}{2 \cdot \text{tan} \left(\frac{\upsilon}{2}\right)}\]</span></li>
 <li><span class="math inline">\(\upsilon\)</span>: vertical FoV</li>
 <li><span class="math inline">\(sh\)</span>: 센서의 세로 길이
 <ul>
@@ -332,7 +328,7 @@ window.Quarto = {
 </ul>
 <hr>
 <ul>
-<li><span class="math inline">\(f_y = f \times \frac{H}{sh} = f = \frac{H}{2 \cdot \text{tan} \left(\frac{\upsilon}{2}\right)}\)</span></li>
+<li><span class="math display">\[f_y = f \times \frac{H}{sh} = f = \frac{H}{2 \cdot \text{tan} \left(\frac{\upsilon}{2}\right)}\]</span></li>
 <li><span class="math inline">\(H\)</span>: image height</li>
 </ul>
 <p><img src="../assets/metric-12.png"></p>
@@ -406,7 +402,7 @@ window.Quarto = {
 <h4 class="anchored" data-anchor-id="moe의-기본-구조">2) MoE의 기본 구조</h4>
 <ul>
 <li>FFN 하나 대신 여러 개의 “Expert” FFN을 배치</li>
-<li>Router(게이트 네트워크)가 각 token을 어떤 expert로 보낼지 결정 <span class="math display">\[\text{MoE}(\mathbf{x}) = \sum^R_{i=1}g(\mathbf{x})_i e_i(\mathbf{x})\]</span></li>
+<li>Router(게이트 네트워크)가 각 token을 어떤 expert로 보낼지 결정 <span class="math display">\[\text{MoE}(\mathbf{x}) = \sum^E_{i=1}g(\mathbf{x})_i e_i(\mathbf{x})\]</span></li>
 <li><span class="math inline">\(\mathbf{x} \in \mathbb{R}^D\)</span></li>
 <li><span class="math inline">\(e_i\)</span>: expert <span class="math inline">\(i\)</span>의 funtion <span class="math inline">\(\mathbb{R}^D \mapsto\mathbb{R}^D\)</span></li>
 <li><span class="math inline">\(e_i(\mathbf{x}) = \text{MLP}_{\theta_i}(\mathbf{x})\)</span></li>
@@ -451,7 +447,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="depth-estimator">6. depth estimator</h3>
 <ul>
 <li>대부분의 depth estimator는 상대적 깊이를 출력해 scale ambiguity 존재</li>
-<li>픽셀을 그저 딥러닝 패텅느로 맞춰서 사람에 대해 특화되어 있지 않음</li>
+<li>픽셀을 그저 딥러닝 패턴으로 맞춰서 사람에 대해 특화되어 있지 않음</li>
 </ul>
 </section>
 <section id="metrichmsrcvpr2026" class="level3">
@@ -463,9 +459,8 @@ window.Quarto = {
 <li>ray map으로 metric 복원, HumanMoE로 pose/position을 disentangle, 복원된 사람을 anchor로 scene depth를 보정</li>
 </ul>
 </section>
-</section>
-<section id="연구-목적" class="level3">
-<h3 class="anchored" data-anchor-id="연구-목적">2) 연구 목적</h3>
+<section id="연구-목적" class="level4">
+<h4 class="anchored" data-anchor-id="연구-목적">2) 연구 목적</h4>
 <ul>
 <li>기존의 문제
 <ul>
@@ -474,6 +469,7 @@ window.Quarto = {
 <li>Feature entanglement: 기존의 모델들은 하나의 네트워크로 pose도 맞추가 절대적 거리<span class="math inline">\(t_z\)</span>도 맞춰야함, local pose와 global position을 구분 못함 entangle되어 하나를 수정하면 다른 것도 흔들림</li>
 </ul></li>
 </ul>
+</section>
 <section id="architecture" class="level4">
 <h4 class="anchored" data-anchor-id="architecture">3) Architecture</h4>
 <p><img src="../assets/metric-15.png"></p>
@@ -503,26 +499,77 @@ window.Quarto = {
 </ul></li>
 <li><p><span class="math inline">\(u'\)</span>에 <span class="math inline">\(u=f_x \cdot(X/Z) + c_x\)</span> 대입</p></li>
 <li><p><span class="math inline">\(u' =(f_x\cdot(X/Z) + c_x - u_{bbox}) /s = (f_x / s) \cdot (X/Z) + (c_x - u_{bbox}) /s\)</span></p></li>
-<li><p><span class="math inline">\(K'^{-1}\)</span>을 구해서 각 픽셀에 적용해 원본 이미지 기준의 ray direction을 구함: H x W x 3 ray map 을 구함 #### 3-2) HumanMoE</p></li>
+<li><p><span class="math inline">\(K'^{-1}\)</span>을 구해서 각 픽셀에 적용해 원본 이미지 기준의 ray direction을 구함: H x W x 3 ray map 을 구함</p></li>
 </ul>
+</section>
+<section id="humanmoe" class="level4">
+<h4 class="anchored" data-anchor-id="humanmoe">3-2) HumanMoE</h4>
 <p><img src="../assets/metric-16.png"></p>
 <ul>
-<li>4개의 routed image expert: 서로 다른 시각적 지식 학습</li>
+<li>Ray map: ViT, Image: ViTPose로 encoding</li>
+<li>4개의 routed image expert: 서로 다른 시각적 지식 학습- body part를 처리하는 expert는 local pose 정보를 추출하는데 특화, 배경/바닥을 처리하는 expert는 global position 단서를 추출하는데 특화</li>
 <li>1개의 shared image expert: 모든 token이 공유하는 공통 지식 학습, expert collapse를 방지하고, 범용적 패턴이 특정 expert에 중복 학습되는 것을 막음</li>
-<li>1개의 ray expert: ray map token만 처리</li>
-<li>Soft MoE를 사용(Top k대신)</li>
+<li>1개의 ray expert: ray map token만 처리 <span class="math inline">\(\rightarrow\)</span> Image token과 ray token 독집적으로 처리</li>
+<li>Soft MoE를 사용(Top k대신)- 모든 expert에 token을 배정해 가중합 처리 <span class="math inline">\(\rightarrow\)</span> 학습이 안정적이고 expert가 고르게 활용</li>
 <li>HumanMoE:patch MoE + global MoE
 <ul>
-<li>patch MoE: image patch token을 semantic에 따라 다른 expert로 routing, 비슷한 body part가 같은 expert로 가는 specialization</li>
-<li>Global MoE: full-image representation을 집약해 전체적 context 파악</li>
+<li>patch MoE: image patch token을 semantic에 따라 다른 expert로 routing, 비슷한 body part가 같은 expert로 가는 specialization: Local detail</li>
+<li>Global MoE: full-image representation(CLS token사용했을듯)을 집약해 전체적 context 파악: Global context</li>
+</ul></li>
+<li>Routing Heatmap
+<ul>
+<li>같은 body part는 같은 expert로, 다른 body part는 다른 expert로 routing 되는 패턴이 명확함</li>
 </ul></li>
 </ul>
 <p><img src="../assets/metric-17.png"></p>
+<ul>
+<li>Qualitative Visualization
+<ul>
+<li>사람의 foreground와 background가 다른 expert로 확실히 분리</li>
+<li>사람 내에서도 다른 expert로 분리</li>
+<li>다른 이미지에서도 semantically 비슷한 영역은 같은 expert로 일관되게 routing됨</li>
+</ul></li>
+</ul>
 <p><img src="../assets/metric-18.png"></p>
 </section>
 <section id="human-guided-metric-depth-refinement" class="level4">
 <h4 class="anchored" data-anchor-id="human-guided-metric-depth-refinement">3-3) Human-Guided Metric Depth Refinement</h4>
 <p><img src="../assets/metric-19.png"></p>
+<ul>
+<li>MapAnything으로 initial depth map을 예측</li>
+<li>Hybrid UNet-ViT backbone이 initial depth map과 예측된 Human mesh를 입력받아 anchor loss를 이용해 per-pixel affine 변환 필드를 예측하여 최종 미터단위 depth 완성</li>
+</ul>
+</section>
+<section id="over-complete-loss" class="level4">
+<h4 class="anchored" data-anchor-id="over-complete-loss">4) Over-complete Loss</h4>
+<p><span class="math display">\[\mathcal{L} = \lambda_{J_{2D}}\mathcal{L}_{J_{2D}} + \lambda_{J_{3D}}\mathcal{L}_{J_{3D}} + \lambda_{V_{3D}}\mathcal{L}_{V_{3D}} + \lambda_{\theta}\mathcal{L}_{\theta} + \lambda_{\beta}\mathcal{L}_{\beta} + \lambda_{h}\mathcal{L}_{h}\]</span></p>
+<ul>
+<li>height loss 추가: height과 <span class="math inline">\(\beta\)</span>(shape)는 연관되어 있지만, 각자 별도로 supervision을 주면 성능이 올라감</li>
+</ul>
+</section>
+</section>
+<section id="experiments" class="level3">
+<h3 class="anchored" data-anchor-id="experiments">8. Experiments</h3>
+<section id="dynamic-cameraembd-2" class="level4">
+<h4 class="anchored" data-anchor-id="dynamic-cameraembd-2">1) Dynamic camera(EMBD-2)</h4>
+<ul>
+<li><p>Global trajectory: video-based 방법과 비</p></li>
+<li><p>single image 만으로 competitive한 per-frame metric position 달성</p></li>
+<li><p>predicted extrinsics(카메라의 위치/각도를 예측) <img src="../assets/metric-20.png"></p></li>
+<li><p>GT extrinsics(카메라 예측 제외, human trajectory만 잘 예측하면 됨) <img src="../assets/metric-21.png"></p></li>
+</ul>
+</section>
+<section id="static-camerarich" class="level4">
+<h4 class="anchored" data-anchor-id="static-camerarich">2) Static Camera(RICH)</h4>
+<p><img src="../assets/metric-22.png"></p>
+</section>
+<section id="local-human-body-poses" class="level4">
+<h4 class="anchored" data-anchor-id="local-human-body-poses">3) Local Human Body Poses</h4>
+<p><img src="../assets/metric-23.png"></p>
+</section>
+<section id="ablation-study" class="level4">
+<h4 class="anchored" data-anchor-id="ablation-study">4) Ablation study</h4>
+<p><img src="../assets/metric-24.png"></p>
 
 
 </section>
