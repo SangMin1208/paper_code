@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="이상민">
+<meta name="dcterms.date" content="2026-02-18">
 
-<title>paper_code</title>
+<title>11. Depth Estimation – paper_code</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +25,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4e350e956af7e737a589c4f4a516a570.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4e350e956af7e737a589c4f4a516a570.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -128,17 +99,17 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">paper_code</span>
     </a>
   </div>
@@ -149,7 +120,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
@@ -172,257 +143,114 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">paper_code</h1>
+    <div class="quarto-title column-body">
+      <h1 class="title">11. Depth Estimation</h1>
                       </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>이상민 </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 18, 2026</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(18)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<section id="foundation-models-for-monocular-depth-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="foundation-models-for-monocular-depth-estimation">Foundation Models for Monocular Depth Estimation</h2>
+<section id="introduction" class="level3">
+<h3 class="anchored" data-anchor-id="introduction">1. Introduction</h3>
+<section id="depth-map-depth-estimation" class="level4">
+<h4 class="anchored" data-anchor-id="depth-map-depth-estimation">Depth map/ Depth estimation</h4>
+<ul>
+<li>우리가 보는 세상은 3차원이지만, 카메라에 담기는 이미지는 2차원</li>
+<li>Depth estimation은 잃어버린 3차원 정보를 복원하는 기술</li>
+<li>input : 2D image <span class="math inline">\(I \in R^{(H \times W \times 3)}\)</span></li>
+<li>output : Depth map <span class="math inline">\(D \in R^{(H \times W)}\)</span></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="depth-estimation" class="level1">
+<h1>Depth Estimation</h1>
+<section id="introduction-1" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-1">1. Introduction</h2>
+<ul>
+<li>왜 Depth Estimation이 중요한지</li>
+<li>응용 사례(자율주행, 로봇, AR/VR)</li>
+<li>왜 근본적으로 어려운지(ill-posed problem, scale ambiguity)</li>
+</ul>
+</section>
+<section id="problem-기존-방법의-한계" class="level2">
+<h2 class="anchored" data-anchor-id="problem-기존-방법의-한계">2. Problem &amp; 기존 방법의 한계</h2>
+<ul>
+<li>Monocular vs Stereo vs LiDAR 비교(각각의 trade-off(비용, 정확도, 일반화))를 표 하나로 정리?</li>
+<li>Supervised 방법이 도메인에 묶이는 문제(데이터셋 편향, NYU Depth V2(실내만) , KITTI(도로만))</li>
+<li>self-supervised, semi-supervised 시도들의 한계</li>
+</ul>
+</section>
+<section id="foundataion-model" class="level2">
+<h2 class="anchored" data-anchor-id="foundataion-model">3. Foundataion Model</h2>
+<ul>
+<li>비교 축
+<ul>
+<li>학습 전략: discriminative (Depth Anything) vs generative/diffusion (Marigold)</li>
+<li>학습 데이터: labeled vs unlabeled vs synthetic</li>
+<li>출력 특성: relative depth vs metric depth</li>
+</ul></li>
+<li>Depth Anything V1 <span class="math inline">\(\rightarrow\)</span> Depth Anything V2 (monocular depth 만들기)</li>
+<li>Marigold (diffusion 기반의 다른 접근)</li>
+<li>Depth Anything V3 (depth를 넘어 visual geometry foundation model)</li>
+<li>(각 버전에서 무엇이 바뀌었고 왜 바뀌었는지 핵심 contribution 1~2개씩)</li>
+<li>UniDepth, Metric3D 도 언급?</li>
+</ul>
+</section>
+<section id="metric-depth-남은-과제" class="level2">
+<h2 class="anchored" data-anchor-id="metric-depth-남은-과제">4. Metric Depth &amp; 남은 과제</h2>
+<ul>
+<li>Affine-invariant depth의 한계(왜 metric이 필요한지 실용적 동기 ex : 로봇이 실제 거리를 알아야 물체를 잡을 수 있다)</li>
+<li>metric depth로 가려는 시도들(ZoeDepth, UniDepth, Metric 3D)</li>
+<li>실내외 generalization 문제</li>
+</ul>
+</section>
+<section id="앞으로의-방향-결론" class="level2">
+<h2 class="anchored" data-anchor-id="앞으로의-방향-결론">5. 앞으로의 방향 &amp; 결론</h2>
+<ul>
+<li><p>“Video consistency 없이 temporal depth가 가능한가?”</p></li>
+<li><p>“Foundation model 하나로 depth + normal + segmentation을 통합할 수 있는가?”</p></li>
+<li><p>“Zero-shot metric depth는 어디까지 왔는가?”</p></li>
+<li><p>Video depth, 3D 연결, foundation model과의 통합 등</p></li>
+</ul>
 
 
+</section>
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-<th>
-Date
-</th>
-<th>
-Title
-</th>
-<th>
-Author
-</th>
-</tr>
-</thead>
-<tbody class="list">
-<tr data-index="0" data-listing-date-sort="1782950400000" data-listing-file-modified-sort="1782967575726" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1" data-listing-title-sort="15. UST-Hand: An Uncertainty-aware Spatiotemporal Point Cloud Interaction Network for 3D Self-supervised Hand Pose Estimation(CVPR'26)" data-listing-filename-sort="15.UST-Hand.ipynb.ipynb">
-<td>
-<span class="listing-date">Jul 2, 2026</span>
-</td>
-<td>
-<a href="./posts/15.UST-Hand.ipynb.html" class="title listing-title">15. UST-Hand: An Uncertainty-aware Spatiotemporal Point Cloud Interaction Network for 3D Self-supervised Hand Pose Estimation(CVPR’26)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="1" data-listing-date-sort="1778198400000" data-listing-file-modified-sort="1782967410238" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2148" data-listing-title-sort="13. MetricHMSR" data-listing-filename-sort="13.MetricHSMR.ipynb">
-<td>
-<span class="listing-date">May 8, 2026</span>
-</td>
-<td>
-<a href="./posts/13.MetricHSMR.html" class="title listing-title">13. MetricHMSR</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="2" data-listing-date-sort="1774915200000" data-listing-file-modified-sort="1782967429614" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="198" data-listing-title-sort="14. Global Human Mesh Recovery" data-listing-filename-sort="14.GlobalHMR.ipynb">
-<td>
-<span class="listing-date">Mar 31, 2026</span>
-</td>
-<td>
-<a href="./posts/14.GlobalHMR.html" class="title listing-title">14. Global Human Mesh Recovery</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="3" data-listing-date-sort="1771545600000" data-listing-file-modified-sort="1782967400150" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="820" data-listing-title-sort="12. Egocentric Vision : new task and trend survey" data-listing-filename-sort="12.Egocentric_Vision.ipynb">
-<td>
-<span class="listing-date">Feb 20, 2026</span>
-</td>
-<td>
-<a href="./posts/12.Egocentric_Vision.html" class="title listing-title">12. Egocentric Vision : new task and trend survey</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="4" data-listing-date-sort="1771372800000" data-listing-file-modified-sort="1782967388950" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="239" data-listing-title-sort="11. Depth Estimation" data-listing-filename-sort="11.Depth_Estimation.ipynb">
-<td>
-<span class="listing-date">Feb 18, 2026</span>
-</td>
-<td>
-<a href="./posts/11.Depth_Estimation.html" class="title listing-title">11. Depth Estimation</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="5" data-listing-date-sort="1769731200000" data-listing-file-modified-sort="1782967330742" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1060" data-listing-title-sort="10. Motions as Queries: One-Stage Multi-Person Holistic Human Motion Capture(CVPR'25)" data-listing-filename-sort="10.Motion_as_Queries.ipynb">
-<td>
-<span class="listing-date">Jan 30, 2026</span>
-</td>
-<td>
-<a href="./posts/10.Motion_as_Queries.html" class="title listing-title">10. Motions as Queries: One-Stage Multi-Person Holistic Human Motion Capture(CVPR’25)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="6" data-listing-date-sort="1768608000000" data-listing-file-modified-sort="1782967369366" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1" data-listing-title-sort="99. Control Net : Adding Conditional Control to Text-to-Image Diffusion Models(ICCV'23)" data-listing-filename-sort="99.ControlNet.ipynb">
-<td>
-<span class="listing-date">Jan 17, 2026</span>
-</td>
-<td>
-<a href="./posts/99.ControlNet.html" class="title listing-title">99. Control Net : Adding Conditional Control to Text-to-Image Diffusion Models(ICCV’23)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="7" data-listing-date-sort="1768521600000" data-listing-file-modified-sort="1782967359026" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1" data-listing-title-sort="99. Stable Diffusion : High-Resolution Image Synthesis with Latent Diffusion Models(CVPR'22)" data-listing-filename-sort="99.Stable_Diffusion.ipynb">
-<td>
-<span class="listing-date">Jan 16, 2026</span>
-</td>
-<td>
-<a href="./posts/99.Stable_Diffusion.html" class="title listing-title">99. Stable Diffusion : High-Resolution Image Synthesis with Latent Diffusion Models(CVPR’22)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="8" data-listing-date-sort="1768435200000" data-listing-file-modified-sort="1782967341842" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1" data-listing-title-sort="99. VGGT: Visual Geometry Grounded Transformer(CVPR'25)" data-listing-filename-sort="99.VGGT.ipynb">
-<td>
-<span class="listing-date">Jan 15, 2026</span>
-</td>
-<td>
-<a href="./posts/99.VGGT.html" class="title listing-title">99. VGGT: Visual Geometry Grounded Transformer(CVPR’25)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="9" data-listing-date-sort="1768176000000" data-listing-file-modified-sort="1782967300514" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="242" data-listing-title-sort="9. Humans in 4D: Reconstructing and Tracking Humans with Transformers(ICCV'23)" data-listing-filename-sort="09.Humans_in_4D.ipynb">
-<td>
-<span class="listing-date">Jan 12, 2026</span>
-</td>
-<td>
-<a href="./posts/09.Humans_in_4D.html" class="title listing-title">9. Humans in 4D: Reconstructing and Tracking Humans with Transformers(ICCV’23)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="10" data-listing-date-sort="1768089600000" data-listing-file-modified-sort="1769586443000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="193" data-listing-title-sort="8. TRACE: 5D Temporal Regression of Avatars With Dynamic Cameras in 3D Environments(CVPR'23)" data-listing-filename-sort="08.TRACE.ipynb">
-<td>
-<span class="listing-date">Jan 11, 2026</span>
-</td>
-<td>
-<a href="./posts/08.TRACE.html" class="title listing-title">8. TRACE: 5D Temporal Regression of Avatars With Dynamic Cameras in 3D Environments(CVPR’23)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="11" data-listing-date-sort="1768003200000" data-listing-file-modified-sort="1775057393000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="653" data-listing-title-sort="7. WHAM: Reconstructing World-grounded Humans with Accurate 3D Motion(CVPR'24)" data-listing-filename-sort="07.WHAM.ipynb">
-<td>
-<span class="listing-date">Jan 10, 2026</span>
-</td>
-<td>
-<a href="./posts/07.WHAM.html" class="title listing-title">7. WHAM: Reconstructing World-grounded Humans with Accurate 3D Motion(CVPR’24)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="12" data-listing-date-sort="1767916800000" data-listing-file-modified-sort="1769480851000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="542" data-listing-title-sort="6. GLAMR: Global Occlusion-Aware Human Mesh Recovery With Dynamic Cameras(CVPR'22)" data-listing-filename-sort="06.GLAMR.ipynb">
-<td>
-<span class="listing-date">Jan 9, 2026</span>
-</td>
-<td>
-<a href="./posts/06.GLAMR.html" class="title listing-title">6. GLAMR: Global Occlusion-Aware Human Mesh Recovery With Dynamic Cameras(CVPR’22)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="13" data-listing-date-sort="1767830400000" data-listing-file-modified-sort="1769497415000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="132" data-listing-title-sort="5. HaMeR : Reconstructing Hands in 3D with Transformers(CVPR'24)" data-listing-filename-sort="05.HaMeR.ipynb">
-<td>
-<span class="listing-date">Jan 8, 2026</span>
-</td>
-<td>
-<a href="./posts/05.HaMeR.html" class="title listing-title">5. HaMeR : Reconstructing Hands in 3D with Transformers(CVPR’24)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="14" data-listing-date-sort="1767744000000" data-listing-file-modified-sort="1778414132780" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="343" data-listing-title-sort="4. HMR: End-to-end Recovery of Human Shape and Pose(CVPR'18)" data-listing-filename-sort="04.HMR.ipynb">
-<td>
-<span class="listing-date">Jan 7, 2026</span>
-</td>
-<td>
-<a href="./posts/04.HMR.html" class="title listing-title">4. HMR: End-to-end Recovery of Human Shape and Pose(CVPR’18)</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="15" data-listing-date-sort="1767571200000" data-listing-file-modified-sort="1777065977076" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="618" data-listing-title-sort="3. SMPL" data-listing-filename-sort="03.SMPL.ipynb">
-<td>
-<span class="listing-date">Jan 5, 2026</span>
-</td>
-<td>
-<a href="./posts/03.SMPL.html" class="title listing-title">3. SMPL</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="16" data-listing-date-sort="1760659200000" data-listing-file-modified-sort="1769154877000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="437" data-listing-title-sort="2. GAN : Generative Adversarial Network" data-listing-filename-sort="02.Generative_Adversarial_Nets.ipynb">
-<td>
-<span class="listing-date">Oct 17, 2025</span>
-</td>
-<td>
-<a href="./posts/02.Generative_Adversarial_Nets.html" class="title listing-title">2. GAN : Generative Adversarial Network</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="17" data-listing-date-sort="1760486400000" data-listing-file-modified-sort="1769155868000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="392" data-listing-title-sort="1. CAM : Learning Deep Features for Discriminative Localization" data-listing-filename-sort="01.Class_Actiation_Map.ipynb">
-<td>
-<span class="listing-date">Oct 15, 2025</span>
-</td>
-<td>
-<a href="./posts/01.Class_Actiation_Map.html" class="title listing-title">1. CAM : Learning Deep Features for Discriminative Localization</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
