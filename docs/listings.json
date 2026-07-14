@@ -1,0 +1,26 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/16.PERSONA.html",
+      "/posts/15.UST-Hand.html",
+      "/posts/13.MetricHSMR.html",
+      "/posts/14.GlobalHMR.html",
+      "/posts/12.Egocentric_Vision.html",
+      "/posts/11.Depth_Estimation.html",
+      "/posts/10.Motion_as_Queries.html",
+      "/posts/99.ControlNet.html",
+      "/posts/99.Stable_Diffusion.html",
+      "/posts/99.VGGT.html",
+      "/posts/09.Humans_in_4D.html",
+      "/posts/08.TRACE.html",
+      "/posts/07.WHAM.html",
+      "/posts/06.GLAMR.html",
+      "/posts/05.HaMeR.html",
+      "/posts/04.HMR.html",
+      "/posts/03.SMPL.html",
+      "/posts/02.Generative_Adversarial_Nets.html",
+      "/posts/01.Class_Actiation_Map.html"
+    ]
+  }
+]
